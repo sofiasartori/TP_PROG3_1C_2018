@@ -3,17 +3,21 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-require '/vendor/autoload.php';
-require '/clases/AccesoDatos.php';
-require '/clases/usuarioApi.php';
-require '/clases/MWparaCORS.php';
-require '/clases/MWparaAutentificar.php';
+require './vendor/autoload.php';
+require './clases/AccesoDatos.php';
+require './clases/usuarioApi.php';
+require './clases/MWparaCORS.php';
+require './clases/MWparaAutentificar.php';
 
+//use \Slim\App;
+
+/*INSTALAR COMPOSER EN LA PC Y APARTE INSTALAR SLIM EN EL PROYECTO DONDE ESTÁ LA CARPETA DEL COMPOSER 
+php composer.phar require slim/slim */
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
-/*$app = new \Slim\Slim();
+/*$app = new \Slim\App();
 
 $app->get('/traerTodos', function() use($app) {
 	$usuario = new Usuario();
@@ -65,14 +69,13 @@ $app->get('/usuario/:usuario/:perfil', function($usuario) use($app) {
 
 $app->run();*/
 
-$app = new \Slim\Slim();
+$app = new \Slim\App;
 
-/*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
 $app->group('/usuario', function () use ($app) {
  
   $app->get('/', \usuarioApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
  
-  $app->get('/{nombre}/{perfil}', \usuarioApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+  $app->get('/{usuario}', \usuarioApi::class . ':TraerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
   $app->post('/', \usuarioApi::class . ':CargarUno');
 

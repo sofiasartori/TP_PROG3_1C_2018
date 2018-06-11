@@ -9,7 +9,7 @@ class Usuario
 
 
 	public function MostrarTodosDatos(){
-		$objetoPDO = new PDO('mysql:host=localhost;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+		$objetoPDO = new PDO('mysql:host=localhost:8080;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 		$objetoPDO->exec("SET CHARACTER SET utf8"); 
 		$consulta =$objetoPDO->prepare("select nombre, apellido, usuario, perfil from usuarios");
 		$consulta->execute();			
@@ -19,6 +19,7 @@ class Usuario
 	 public function InsertarUsuario()
 	 {
 				$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+				echo ('insertando');
 				$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (nombre, apellido, usuario, perfil)values('$this->nombre', '$this->apellido','$this->usuario','$this->perfil')");
 				$consulta->execute();
 				return $objetoAccesoDato->RetornarUltimoIdInsertado();
