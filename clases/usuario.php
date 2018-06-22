@@ -5,27 +5,41 @@ class Usuario
 	public $nombre;
  	public $apellido;
   	public $usuario;
-  	public $perfil;
+	public $perfil;
+	public $area;
 
 
 	public function MostrarTodosDatos(){
-		$objetoPDO = new PDO('mysql:host=localhost:8080;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+		//$this->objetoPDO = new PDO('mysql:host=localhost;sdbname=id6145613_sofiasar_final;charset=utf8', 'id6145613_sofiasar_sofia', 'iPad2017', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+		$objetoPDO = new PDO('mysql:host=localhost;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 		$objetoPDO->exec("SET CHARACTER SET utf8"); 
-		$consulta =$objetoPDO->prepare("select nombre, apellido, usuario, perfil from usuarios");
+		$consulta =$objetoPDO->prepare("select nombre, apellido, usuario, perfil, area from usuarios");
 		$consulta->execute();			
 		return $consulta->fetchAll(PDO::FETCH_CLASS, "Usuario");
 	}
 
-	 public function InsertarUsuario()
-	 {
-				$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-				echo ('insertando');
-				$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (nombre, apellido, usuario, perfil)values('$this->nombre', '$this->apellido','$this->usuario','$this->perfil')");
-				$consulta->execute();
-				return $objetoAccesoDato->RetornarUltimoIdInsertado();
-				
+	public static function TraerUnUsuario($usuario) 
+	{
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("select id, nombre, apellido, usuario, perfil, area from usuarios where usuario = '$usuario'");
+		$consulta->execute();
+		$usuarioBuscado= $consulta->fetchObject('Usuario');
+		return $usuarioBuscado;				
+	}
 
-	 }
+	public function InsertarUsuario()
+	{
+		$objetoPDO = new PDO('mysql:host=localhost;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+		$consulta =$objetoPDO->prepare("INSERT into usuarios (nombre, apellido, usuario, perfil, area)values(:nombre,:apellido, :usuario, :perfil, :area)");
+		$consulta->bindValue(':nombre',$nombre, PDO::PARAM_STR);
+		$consulta->bindValue(':apellido', $apellido, PDO::PARAM_STR);
+		$consulta->bindValue(':usuario', $usuario, PDO::PARAM_STR);
+		$consulta->bindValue(':perfil', $usuario, PDO::PARAM_STR);
+		$consulta->bindValue(':area', $usuario, PDO::PARAM_STR);
+		$consulta->execute();
+		return $objetoAccesoDato->RetornarUltimoIdInsertado();		
+
+	}
 
 	 /*public function InsertarDatos($valor_char, $valor_date, $valor_int){
 		$objetoPDO = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -38,17 +52,4 @@ class Usuario
 	 }*/
 	 
 	 
-
-	public static function TraerUnUsuario($usuario) 
-	{
-			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("select id, nombre, apellido, usuario, perfil from usuarios where usuario = '$usuario'");
-			$consulta->execute();
-			$usuarioBuscado= $consulta->fetchObject('Usuario');
-			return $usuarioBuscado;				
-
-			
-	}
-
-
 }

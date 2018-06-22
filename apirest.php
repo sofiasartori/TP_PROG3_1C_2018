@@ -3,21 +3,17 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-require './vendor/autoload.php';
-require './clases/AccesoDatos.php';
-require './clases/usuarioApi.php';
-require './clases/MWparaCORS.php';
-require './clases/MWparaAutentificar.php';
-
-//use \Slim\App;
-
-/*INSTALAR COMPOSER EN LA PC Y APARTE INSTALAR SLIM EN EL PROYECTO DONDE ESTÁ LA CARPETA DEL COMPOSER 
-php composer.phar require slim/slim */
+require 'vendor/autoload.php';
+require 'clases/AccesoDatos.php';
+require 'clases/usuarioApi.php';
+require 'clases/MWparaCORS.php';
+require 'clases/MWparaAutentificar.php';
+require_once 'clases/JWT.php';
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
-/*$app = new \Slim\App();
+/*$app = new \Slim\Slim();
 
 $app->get('/traerTodos', function() use($app) {
 	$usuario = new Usuario();
@@ -69,20 +65,37 @@ $app->get('/usuario/:usuario/:perfil', function($usuario) use($app) {
 
 $app->run();*/
 
-$app = new \Slim\App;
+$app = new \Slim\App();
+/*use \Slim\App;
 
-$app->group('/usuario', function () use ($app) {
+$app = new App();*/
+
+/*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
+$app->group('/comanda', function () use ($app) {
  
-  $app->get('/', \usuarioApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+  $app->get('/', \comandaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
  
-  $app->get('/{usuario}', \usuarioApi::class . ':TraerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+  $app->get('/{usuario}/{perfil}', \comandaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
-  $app->post('/', \usuarioApi::class . ':CargarUno');
+  $app->post('/', \comandaApi::class . ':CargarUno');
 
-  $app->delete('/', \usuarioApi::class . ':BorrarUno');
+  $app->delete('/', \comandaApi::class . ':BorrarUno');
 
-  $app->put('/', \usuarioApi::class . ':ModificarUno');
+  $app->put('/', \comandaApi::class . ':ModificarUno');
      
-})->add(\MWparaAutentificar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+})->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
+$app->post('/login/', function(Request $request, Response $response){
+	$datos = $request->getParsedBody();
+	$nombre=$datos['usuario'];
+	$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+	$perfil =$objetoAccesoDato->RetornarConsulta("select perfil from usuarios where usuario = '$nombre'");  
+	$area =$objetoAccesoDato->RetornarConsulta("select area from usuarios where usuario = '$nombre'");
+  	$data=array('Usuario'=>$nombre, 'Perfil'=>$perfil, 'Area'=>$area);
+	
+	$token= JsonWToken::LogIn($data); 
+  	$newResponse = $response->withJson($token, 200); 
+  	return $newResponse;
+})->add(\MWparaCORS::class . ':HabilitarCORS8080');
 $app->run();
+
