@@ -18,10 +18,10 @@ class Usuario
 		return $consulta->fetchAll(PDO::FETCH_CLASS, "Usuario");
 	}
 
-	public static function TraerUnUsuario($usuario) 
+	public function TraerUnUsuario($usuario) 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("select id, nombre, apellido, usuario, perfil, area from usuarios where usuario = '$usuario'");
+		$consulta =$objetoAccesoDato->RetornarConsulta("select id_usuario, nombre, apellido, usuario, perfil, area from usuarios where usuario = '$usuario'");
 		$consulta->execute();
 		$usuarioBuscado= $consulta->fetchObject('Usuario');
 		return $usuarioBuscado;				
@@ -29,16 +29,14 @@ class Usuario
 
 	public function InsertarUsuario()
 	{
-		$objetoPDO = new PDO('mysql:host=localhost;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-		$consulta =$objetoPDO->prepare("INSERT into usuarios (nombre, apellido, usuario, perfil, area)values(:nombre,:apellido, :usuario, :perfil, :area)");
-		$consulta->bindValue(':nombre',$nombre, PDO::PARAM_STR);
-		$consulta->bindValue(':apellido', $apellido, PDO::PARAM_STR);
-		$consulta->bindValue(':usuario', $usuario, PDO::PARAM_STR);
-		$consulta->bindValue(':perfil', $usuario, PDO::PARAM_STR);
-		$consulta->bindValue(':area', $usuario, PDO::PARAM_STR);
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (nombre, apellido, usuario, perfil, area)values(:nombre,:apellido, :usuario, :perfil, :area)");
+		$consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
+		$consulta->bindValue(':apellido', $this->apellido, PDO::PARAM_STR);
+		$consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
+		$consulta->bindValue(':perfil', $this->perfil, PDO::PARAM_STR);
+		$consulta->bindValue(':area', $this->area, PDO::PARAM_STR);
 		$consulta->execute();
-		return $objetoAccesoDato->RetornarUltimoIdInsertado();		
-
 	}
 
 	 /*public function InsertarDatos($valor_char, $valor_date, $valor_int){

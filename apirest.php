@@ -5,6 +5,8 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
 require 'clases/AccesoDatos.php';
+require 'clases/comandaApi.php';
+require 'clases/usuario.php';
 require 'clases/usuarioApi.php';
 require 'clases/MWparaCORS.php';
 require 'clases/MWparaAutentificar.php';
@@ -65,37 +67,53 @@ $app->get('/usuario/:usuario/:perfil', function($usuario) use($app) {
 
 $app->run();*/
 
-$app = new \Slim\App();
+$app = new \Slim\App(["settings" => $config]);
 /*use \Slim\App;
 
 $app = new App();*/
 
 /*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
-$app->group('/comanda', function () use ($app) {
+$app->group('/comanda', function () {
  
-  $app->get('/', \comandaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+  $this->get('/', \comandaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
  
-  $app->get('/{usuario}/{perfil}', \comandaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+  $this->get('/{codigo}/', \comandaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
-  $app->post('/', \comandaApi::class . ':CargarUno');
+  $this->post('/', \comandaApi::class . ':CargarUno');
 
-  $app->delete('/', \comandaApi::class . ':BorrarUno');
+  $this->delete('/', \comandaApi::class . ':BorrarUno');
 
-  $app->put('/', \comandaApi::class . ':ModificarUno');
+  $this->put('/', \comandaApi::class . ':ModificarUno');
      
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
+$app->group('/usuario', function () {
+ 
+	$this->get('/', \usuarioApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+   
+	$this->get('/{id_usuario}/', \usuarioApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+  
+	$this->post('/', \usuarioApi::class . ':CargarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+  
+	$this->delete('/', \usuarioApi::class . ':BorrarUno');
+  
+	$this->put('/', \usuarioApi::class . ':ModificarUno');
+	   
+  })->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
 
 $app->post('/login/', function(Request $request, Response $response){
 	$datos = $request->getParsedBody();
 	$nombre=$datos['usuario'];
-	$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-	$perfil =$objetoAccesoDato->RetornarConsulta("select perfil from usuarios where usuario = '$nombre'");  
-	$area =$objetoAccesoDato->RetornarConsulta("select area from usuarios where usuario = '$nombre'");
-  	$data=array('Usuario'=>$nombre, 'Perfil'=>$perfil, 'Area'=>$area);
 	
+	$usuario=new Usuario();
+	$usuarioBuscado=$usuario->TraerUnUsuario($nombre);
+	$perfilJWT = $usuarioBuscado->perfil;
+	$areaJWT = $usuarioBuscado->area;
+	$data=array('Usuario'=>$nombre, 'Perfil'=>$perfilJWT, 'Area'=>$areaJWT);
 	$token= JsonWToken::LogIn($data); 
   	$newResponse = $response->withJson($token, 200); 
-  	return $newResponse;
+	return $newResponse;	  
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 $app->run();
 

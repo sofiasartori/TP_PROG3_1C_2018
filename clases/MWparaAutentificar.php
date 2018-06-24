@@ -27,24 +27,9 @@ class MWparaAutentificar
 		     $response = $next($request, $response);
 		  }
 		  else
-		  {
-		    //*$response->getBody()->write('<p>verifico credenciales</p>');
-		    $ArrayDeParametros = $request->getParsedBody();
-		    $nombre=$ArrayDeParametros['nombre'];
-		    $tipo=$ArrayDeParametros['perfil'];
-		    /*if($tipo=="socia")
-		    {
-		      $response->getBody()->write("<h3>Bienvenido $nombre </h3>");
-		      $response = $next($request, $response);
-		    }
-		    else
-		    {
-		      $response->getBody()->write('<p>no tenes habilitado el ingreso</p>');
-				}*/
-				$datos=array("usuario"=> $nombre, "perfil"=>$tipo);
-				$token= JsonWToken::LogIn($datos);
-				$objResp->esValido=true;
+		  {		    
 				try{
+					$token=$request->getHeader('HTTP_RESTAURANTLOLO')[0];
 					JsonWToken::Checkear($token);
 					$objResp->esValido=true;
 				}
@@ -55,7 +40,8 @@ class MWparaAutentificar
 
 				if($objResp->esValido){
 					$payload=JsonWToken::ObtenerDatos($token);
-					if($payload->perfil=="socio"){
+					var_dump($payload);
+					if($payload->Perfil=="socio"){
 						echo $token;
 						$response=$next($request, $response);
 						

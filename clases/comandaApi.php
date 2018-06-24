@@ -7,9 +7,9 @@ class comandaApi extends Comanda implements IApiUsable
  	
      public function TraerUno($request, $response, $args) {
       $codigo=$args['codigo'];
-      $codigo=Comanda::ConsultarPedido($codigo);
-      $response = $response->withJson($codigo, 200);  
-      return $response;
+      $pedido=Comanda::ConsultarPedido($codigo);
+      $respuesta = $response->withJson("El tiempo de espera para su pedido es de ".$pedido->tiempo." minutos", 200);  
+      return $respuesta;
     }
     
     public function CargarUno($request, $response, $args) {
@@ -19,25 +19,28 @@ class comandaApi extends Comanda implements IApiUsable
         $id_usuario=$ArrayDeParametros['usuario'];
         //$foto_mesa= ver como se obtiene una foto con $request
         $nombre_cliente=$ArrayDeParametros['cliente'];
-        $miPedido = new Comanda();
-        $miPedido->mesa=$id_mesa;
-        $miPedido->mozo=$id_usuario;
-        $miPedido->foto=$foto_mesa;
-        $miPedido->nombre_cliente=$nombre_cliente;
-        $miPedido->TomarPedido();
-        $codigo='';
+        
+        $id_comanda='';
         $caracteres = 'abcdefghijklmnopqrstuvwxyz0123456789';
         $max = strlen($caracteres) - 1;
         for ($i = 0; $i < 5; $i++) {
-            $codigo .= $caracteres[mt_rand(0, $max)];
+            $id_comanda .= $caracteres[mt_rand(0, $max)];
         }
-        $response->getBody()->write("Pedido tomado, el codigo es: ".$codigo);
+
+        $miPedido = new Comanda();
+        $miPedido->codigoAlfa=$id_comanda;
+        $miPedido->mesa=$id_mesa;
+        $miPedido->mozo=$id_usuario;
+        //$miPedido->foto=$foto_mesa;
+        $miPedido->nombre_cliente=$nombre_cliente;        
+        $miPedido->TomarPedido();
+        
+        $response->getBody()->write("Pedido tomado, el codigo es: ".$id_comanda);
         return $response;
     }
     
     public function ModificarUno($request, $response, $args){
         $ArrayDeParametros = $request->getParsedBody();
-        //var_dump($ArrayDeParametros);
         $tiempo= $ArrayDeParametros['tiempo'];
         $codigo= $ArrayDeParametros['codigo'];
                 
@@ -45,8 +48,7 @@ class comandaApi extends Comanda implements IApiUsable
         $miPedido->tiempo=$tiempo;
         $miPedido->codigoAlfa=$codigo;
         $miPedido->EstablecerTiempo();
-        $response->getBody()->write("Se estableció el tiempo estimado del pedido en ".$tiempo);
-
+        $response->getBody()->write("Se estableció el tiempo estimado del pedido en ".$tiempo." minutos para la comanda ".$codigo);
         return $response;
     }
 
