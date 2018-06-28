@@ -51,5 +51,11 @@ class Comanda
 		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set estado='cancelado' where id_comanda=:id_comanda");
 		$consulta->bindValue(':id_comanda',$this->codigoAlfa, PDO::PARAM_STR);
 		$consulta->execute();
-	}	 
+	}
+	
+	public function CargarHoraFin($id, $id_comanda){
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+		$fecha_fin=$objetoAccesoDato->RetornarConsulta("UPDATE comandas SET fecha_fin=NOW() WHERE id_mesa=$id and fecha_fin IS NULL");
+		$fecha_fin->execute();
+	}
 }

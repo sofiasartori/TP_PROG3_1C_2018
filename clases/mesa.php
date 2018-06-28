@@ -6,45 +6,39 @@ class Mesa
   	public $estado;
 
 
-	public function CambiarEstado($id, $estado){
-		//$this->objetoPDO = new PDO('mysql:host=localhost;sdbname=id6145613_sofiasar_final;charset=utf8', 'id6145613_sofiasar_sofia', 'iPad2017', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-		$objetoPDO = new PDO('mysql:host=localhost;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-		$objetoPDO->exec("SET CHARACTER SET utf8"); 
-		$consulta =$objetoPDO->prepare("UPDATE mesas SET estado='$estado' WHERE id_mesa=$id");
-        $consulta->execute();			
-		echo "Estado de la mesa ".$id." cambiado a ".$estado;
+	public function CambiarEstado(){
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas SET estado=:estado WHERE id_mesa=:id");
+		$consulta->bindValue(':id', $this->id_mesa, PDO::PARAM_INT);
+		$consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
+        $consulta->execute();		
+		
 	}
 
-	public static function AbrirMesa($id) 
-	{
-		$objetoPDO = new PDO('mysql:host=localhost;dbname=sofiasar_final;charset=utf8', 'root', '', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-		$consulta =$objetoPDO->prepare("INSERT into mesas values(:id, 'Con cliente esperando pedido')");
-		$consulta->bindValue(':id',$id, PDO::PARAM_INT);
-		$consulta->execute();
-		echo "La mesa ".$id." fue abierta";							
-	}
-
-	public function CerrarMesa($perfil, $id, $id_pedido)
-	{
-		if($perfil=='socio')
-		//tengo que verificar con el jwt->getPayload
-		{
-            $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas SET estado='Cerrada' WHERE id=$id");
-            $consulta->execute();
-            $fecha_fin=$objetoAccesoDato->RetornarConsulta("UPDATE comandas SET fecha_fin=NOW() WHERE id_mesa=$id and id_comanda=$id_pedido");
-            echo "La mesa ".$id." fue cerrada";
-        }
-        else
-            echo "Solo un socio puede cerrar la mesa";
-	}
-
-	public function ConsultarMesa($id)
+	public static function AbrirMesa() 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT estado FROM mesas WHERE id=$id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into mesas values(:id, 'Con cliente esperando pedido')");
+		$consulta->bindValue(':id',$this->id_mesa, PDO::PARAM_INT);
+		$consulta->execute();							
+	}
+
+	public function CerrarMesa()
+	{
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas SET estado='Cerrada' WHERE id=:id");
+		$consulta->bindValue(':id', $this->id_mesa, PDO::PARAM_INT);
 		$consulta->execute();
-		echo "El estado de la mesa es: ".$consulta;      
+		$comanda = new Comanda();
+		$comanda::CargarHoraFin($this->id_mesa);		
+	}
+
+	public function ConsultarMesa()
+	{
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT estado FROM mesas WHERE id=:id");
+		$consulta->bindValue(':id', $this->id_mesa, PDO::PARAM_INT);
+		$consulta->execute();
 	}
 
 	public function traerTodasLasMesas(){

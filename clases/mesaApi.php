@@ -7,8 +7,8 @@ class mesaApi extends Mesa implements IApiUsable
  	
      public function TraerUno($request, $response, $args) {
       $id=$args['mesa'];
-      $id=Mesa::ConsultarMesa($id);
-      $response = $response->withJson($id, 200);  
+      $mesa=Mesa::ConsultarMesa($id);
+      $respuesta = $response->withJson("El estado de la mesa ".$id." es: ".$mesa->estado, 200);  
       return $response;
     }
     
@@ -16,11 +16,13 @@ class mesaApi extends Mesa implements IApiUsable
         $ArrayDeParametros = $request->getParsedBody();
         //var_dump($ArrayDeParametros);
         $id= $ArrayDeParametros['mesa'];
+        $estado= $ArrayDeParametros['estado'];
                 
         $miMesa = new Mesa();
         $miMesa->id_mesa=$id;
+        $miMesa->estado=$estado;
         $miUsuario->AbrirMesa();
-        $response->getBody()->write("Se abrió la mesa");
+        $response->getBody()->write("Se abrió la mesa ".$id);
 
         return $response;
     }
@@ -35,7 +37,7 @@ class mesaApi extends Mesa implements IApiUsable
         $miMesa->id_mesa=$id;
         $miMesa->estado=$estado;
         $miUsuario->CambiarEstado();
-        $response->getBody()->write("Se abrió la mesa");
+        $response->getBody()->write("Se cambió el estado de la mesa ".$id." a ".$estado);
 
         return $response;
     }
@@ -44,5 +46,14 @@ class mesaApi extends Mesa implements IApiUsable
         $consulta= Mesa::traerTodasLasMesas();
         $response = $response->withJson($id, 200);
     }
-	
+    
+    public function BorrarUno($request, $response, $args){
+        $ArrayDeParametros = $request->getParsedBody();
+        $id = $ArrayDeParametros['id'];
+        
+        $miMesa=new Mesa();
+        $miMesa->id_mesa=$id;
+        $miMesa->CerrarMesa();
+        $response->getBody()->write("Se cerró la mesa ".$id);
+    }
 }
