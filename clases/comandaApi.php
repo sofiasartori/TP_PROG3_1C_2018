@@ -20,7 +20,8 @@ class comandaApi extends Comanda implements IApiUsable
         //$foto_mesa= ver como se obtiene una foto con $request
         $nombre_cliente=$ArrayDeParametros['cliente'];
         $items=array();
-        foreach ($ArrayDeParametros['item'] as $valor) {
+        
+        foreach ($ArrayDeParametros['item'] as $key => $valor) {
             array_push($items, $valor);
         }        
         
@@ -36,9 +37,7 @@ class comandaApi extends Comanda implements IApiUsable
         $miPedido->mesa=$id_mesa;
         $miPedido->mozo=$id_usuario;
         //$miPedido->foto=$foto_mesa;
-        $miPedido->nombre_cliente=$nombre_cliente;        
-        $miPedido->items = $items;
-        $miPedido->cantidad=2;
+        $miPedido->nombre_cliente=$nombre_cliente;
         
         $miPedido->TomarPedido($items);
         

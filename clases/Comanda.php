@@ -28,12 +28,11 @@ class Comanda
 		$consulta->bindValue(':nombre_cliente', $this->nombre_cliente, PDO::PARAM_STR);		
 		$consulta->execute();			
 		
-		foreach ($items as $valor) {
-			var_dump($items);
+		for ($i=0; $i <sizeof($items) ; $i++) { 
 			$itemsComanda = $objetoAccesoDato->RetornarConsulta("INSERT into itemsxcomanda (id_item, id_comanda, cantidad) values (:id_item, :id_comanda, :cantidad);");
-			$itemsComanda->bindValue(':id_item', $valor, PDO::PARAM_INT);
+			$itemsComanda->bindValue(':id_item', $items[$i]['item'], PDO::PARAM_INT);
 			$itemsComanda->bindValue(':id_comanda', $this->codigoAlfa, PDO::PARAM_STR);
-			$itemsComanda->bindValue(':cantidad', $this->cantidad, PDO::PARAM_INT);
+			$itemsComanda->bindValue(':cantidad', $items[$i]['cantidad'], PDO::PARAM_INT);
 			$itemsComanda->execute();
 		}
 		
