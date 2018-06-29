@@ -12,9 +12,11 @@ class Comanda
     public $fecha;
 	public $hora_fin;
 	public $codigoAlfa;
+	public $items;
+	public $cantidad;
 
 
-	public function TomarPedido(){
+	public function TomarPedido($items){
 		$fecha=date("D-M-Y");
 		$hora=date("H:i:s");
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
@@ -24,7 +26,17 @@ class Comanda
 		$consulta->bindValue(':id_usuario', $this->mozo, PDO::PARAM_INT);
 		//$consulta->bindValue(':foto_mesa', $foto, PDO::PARAM_STR);
 		$consulta->bindValue(':nombre_cliente', $this->nombre_cliente, PDO::PARAM_STR);		
-        $consulta->execute();			
+		$consulta->execute();			
+		
+		foreach ($items as $valor) {
+			var_dump($items);
+			$itemsComanda = $objetoAccesoDato->RetornarConsulta("INSERT into itemsxcomanda (id_item, id_comanda, cantidad) values (:id_item, :id_comanda, :cantidad);");
+			$itemsComanda->bindValue(':id_item', $valor, PDO::PARAM_INT);
+			$itemsComanda->bindValue(':id_comanda', $this->codigoAlfa, PDO::PARAM_STR);
+			$itemsComanda->bindValue(':cantidad', $this->cantidad, PDO::PARAM_INT);
+			$itemsComanda->execute();
+		}
+		
 	}
 
 	public function EstablecerTiempo() 

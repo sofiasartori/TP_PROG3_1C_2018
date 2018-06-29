@@ -31,7 +31,7 @@ $app->group('/comanda', function () {
 
   $this->post('/', \comandaApi::class . ':CargarUno');
 
-  $this->delete('/', \comandaApi::class . ':BorrarUno');
+  $this->delete('/', \comandaApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . 'VerificarMozo');
 
   $this->put('/', \comandaApi::class . ':ModificarUno');
      

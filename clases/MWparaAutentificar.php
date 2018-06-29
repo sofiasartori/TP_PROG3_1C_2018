@@ -61,4 +61,47 @@ class MWparaAutentificar
 		  //$response->getBody()->write('<p>vuelvo del verificador de credenciales</p>');
 		  return $response;   
 	}
+
+	public function VerificarMozo($request, $response, $next) {
+		$objResp= new stdclass();
+		$objResp->respuesta="";	
+		
+		  if($request->isPut())
+		  {
+		         
+			try{
+				$token=$request->getHeader('HTTP_RESTAURANTLOLO')[0];
+				JsonWToken::Checkear($token);
+				$objResp->esValido=true;
+			}
+			catch (Exception $e){
+				$objResp->excepcion=$e->getMessage();
+				$objResp->esValido=false;
+			}
+
+			if($objResp->esValido){
+				$payload=JsonWToken::ObtenerDatos($token);
+				var_dump($payload);
+				if($payload->Perfil=="mozo"){
+					echo $token;
+					$response=$next($request, $response);
+					
+				}
+				else
+					$objResp->respuesta="Solo mozos pueden realizar esta acción";
+			}
+			else{
+				$objResp="Solo usuarios registrados";
+				$objResp->elToken=$token;
+			}
+		}
+		else
+			echo "no funciona el isPut";
+		if($objResp->respuesta !=""){
+			$nueva=$response->withJson($objResp, 401);
+			return $nueva;
+		}
+		//$response->getBody()->write('<p>vuelvo del verificador de credenciales</p>');
+		return $response;   
+	}
 }

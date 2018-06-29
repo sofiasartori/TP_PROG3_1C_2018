@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.7.9
+-- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-06-2018 a las 04:40:41
--- Versión del servidor: 10.1.10-MariaDB
--- Versión de PHP: 7.0.4
+-- Tiempo de generación: 29-06-2018 a las 19:26:26
+-- Versión del servidor: 10.1.31-MariaDB
+-- Versión de PHP: 7.2.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -44,8 +46,14 @@ CREATE TABLE `comandas` (
 --
 
 INSERT INTO `comandas` (`id_comanda`, `id_mesa`, `id_usuario`, `foto_mesa`, `nombre_cliente`, `estado`, `tiempo`, `hora_inicio`, `fecha`, `hora_fin`) VALUES
+('0akz6', 2, 0, NULL, 'prueba', NULL, NULL, '19:20:18', '0000-00-00', NULL),
+('0u41v', 2, 0, NULL, 'prueba', NULL, NULL, '19:15:52', '0000-00-00', NULL),
 ('9cim0', 2, 3, NULL, 'Peblo', NULL, NULL, '00:00:00', '2024-06-18', NULL),
-('m2aqh', 2, 3, NULL, 'Olga', 'cancelado', 25, '22:19:31', '0000-00-00', NULL);
+('ha3cn', 2, 0, NULL, 'prueba', NULL, NULL, '19:19:16', '0000-00-00', NULL),
+('m2aqh', 2, 3, NULL, 'Olga', 'cancelado', 25, '22:19:31', '0000-00-00', NULL),
+('oyhqd', 2, 0, NULL, 'prueba', NULL, NULL, '19:16:53', '0000-00-00', NULL),
+('p1wvn', 2, 0, NULL, 'prueba', NULL, NULL, '19:15:22', '0000-00-00', NULL),
+('pt20n', 2, 0, NULL, 'prueba', NULL, NULL, '19:20:42', '0000-00-00', NULL);
 
 -- --------------------------------------------------------
 
@@ -67,9 +75,20 @@ CREATE TABLE `items` (
 
 CREATE TABLE `itemsxcomanda` (
   `id_item` int(11) NOT NULL,
-  `id_comanda` int(11) NOT NULL,
+  `id_comanda` varchar(5) COLLATE utf8_spanish2_ci NOT NULL,
   `cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `itemsxcomanda`
+--
+
+INSERT INTO `itemsxcomanda` (`id_item`, `id_comanda`, `cantidad`) VALUES
+(5, '0', 2),
+(5, '0akz6', 2),
+(2, 'pt20n', 2),
+(4, 'pt20n', 2),
+(5, 'pt20n', 2);
 
 -- --------------------------------------------------------
 
@@ -125,12 +144,6 @@ ALTER TABLE `items`
   ADD PRIMARY KEY (`id_item`);
 
 --
--- Indices de la tabla `itemsxcomanda`
---
-ALTER TABLE `itemsxcomanda`
-  ADD PRIMARY KEY (`id_item`,`id_comanda`);
-
---
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -145,16 +158,14 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `items`
   MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT de la tabla `itemsxcomanda`
---
-ALTER TABLE `itemsxcomanda`
-  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
