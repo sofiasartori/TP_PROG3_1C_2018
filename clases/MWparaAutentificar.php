@@ -34,15 +34,14 @@ class MWparaAutentificar
 					$objResp->esValido=true;
 				}
 				catch (Exception $e){
-					$objResp->excepcion=$e->getMessage();
+					//$objResp->excepcion=$e->getMessage();
 					$objResp->esValido=false;
 				}
 
 				if($objResp->esValido){
 					$payload=JsonWToken::ObtenerDatos($token);
-					var_dump($payload);
 					if($payload->Perfil=="socio"){
-						echo $token;
+						//echo $token;
 						$response=$next($request, $response);
 						
 					}
@@ -50,8 +49,7 @@ class MWparaAutentificar
 						$objResp->respuesta="Solo administradores";
 				}
 				else{
-					$objResp="Solo usuarios registrados";
-					$objResp->elToken=$token;
+					$objResp->respuesta="Solo usuarios registrados";
 				}
 			}
 			if($objResp->respuesta !=""){
@@ -81,9 +79,8 @@ class MWparaAutentificar
 
 			if($objResp->esValido){
 				$payload=JsonWToken::ObtenerDatos($token);
-				var_dump($payload);
 				if($payload->Perfil=="mozo"){
-					echo $token;
+					//echo $token;
 					$response=$next($request, $response);
 					
 				}

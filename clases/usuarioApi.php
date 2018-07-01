@@ -33,11 +33,25 @@ class usuarioApi extends Usuario implements IApiUsable
     }
 
     public function BorrarUno($request, $response, $args){
+        $ArrayDeParametros = $request->getParsedBody();
+        $usuario= $ArrayDeParametros['usuario'];
 
+        $miUsuario = new Usuario();
+        $miUsuario->usuario=$usuario;
+        $miUsuario->BorrarUsuario();
+        $response->getBody()->write("El usuario ".$usuario." fue dado de baja del sistema");
     }
 
     public function ModificarUno($request, $response, $args){
+        $ArrayDeParametros = $request->getParsedBody();
+        $usuario= $ArrayDeParametros['usuario'];
+        $estado=$ArrayDeParametros['estado'];
 
+        $miUsuario = new Usuario();
+        $miUsuario->usuario=$usuario;
+        $miUsuario->estado=$estado;
+        $miUsuario->CambiarEstadoUsuario();
+        $response->getBody()->write("El estado del usuario ".$usuario." cambió a ".$estado);
     }
 
     public function TraerTodos($request, $response, $args){

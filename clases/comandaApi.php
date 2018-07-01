@@ -8,7 +8,7 @@ class comandaApi extends Comanda implements IApiUsable
      public function TraerUno($request, $response, $args) {
       $codigo=$args['codigo'];
       $pedido=Comanda::ConsultarPedido($codigo);
-      $respuesta = $response->withJson("El tiempo de espera para su pedido es de ".$pedido->tiempo." minutos", 200);  
+      $respuesta = $response->withJson("El tiempo de espera para su pedido es de ".$pedido->tiempo_cocina." minutos", 200);  
       return $respuesta;
     }
     

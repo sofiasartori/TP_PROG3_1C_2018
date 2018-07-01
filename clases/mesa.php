@@ -15,7 +15,7 @@ class Mesa
 		
 	}
 
-	public static function AbrirMesa() 
+	public function AbrirMesa() 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into mesas values(:id, 'Con cliente esperando pedido')");
@@ -26,19 +26,21 @@ class Mesa
 	public function CerrarMesa()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas SET estado='Cerrada' WHERE id=:id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas SET estado='Cerrada' WHERE id_mesa=:id");
 		$consulta->bindValue(':id', $this->id_mesa, PDO::PARAM_INT);
 		$consulta->execute();
 		$comanda = new Comanda();
 		$comanda::CargarHoraFin($this->id_mesa);		
 	}
 
-	public function ConsultarMesa()
+	public function ConsultarMesa($id)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT estado FROM mesas WHERE id=:id");
-		$consulta->bindValue(':id', $this->id_mesa, PDO::PARAM_INT);
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT estado FROM mesas WHERE id_mesa=$id");
 		$consulta->execute();
+		$mesaBuscada= $consulta->fetchObject('Mesa');
+		return $mesaBuscada;
+
 	}
 
 	public function traerTodasLasMesas(){

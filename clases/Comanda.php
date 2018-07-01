@@ -7,7 +7,9 @@ class Comanda
   	public $foto;
 	public $nombre_cliente;
     public $estado;
-    public $tiempo;
+	public $tiempo_cocina;
+	public $tiempo_barra;
+	public $tiempo_cerveza;
     public $hora_inicio;
     public $fecha;
 	public $hora_fin;
@@ -17,7 +19,7 @@ class Comanda
 
 
 	public function TomarPedido($items){
-		$fecha=date("D-M-Y");
+		$fecha=date("Y-m-d");
 		$hora=date("H:i:s");
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into comandas (id_comanda, id_mesa, id_usuario, nombre_cliente, hora_inicio, fecha) values (:id_comanda,:id_mesa, :id_usuario, :nombre_cliente, '$hora', '$fecha')");
@@ -41,8 +43,9 @@ class Comanda
 	public function EstablecerTiempo() 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set tiempo=:tiempo where id_comanda=:id_pedido");
-		$consulta->bindValue(':tiempo', $this->tiempo, PDO::PARAM_INT);
+		//tal vez necesite hacer una clase que se llame trabajador o algo asi, para establecer los tiempos, aceptar los pedidos, etc y mas tablas
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set tiempo_cocina=:tiempo_cocina where id_comanda=:id_pedido");
+		$consulta->bindValue(':tiempo_cocina', $this->tiempo_cocina, PDO::PARAM_INT);
 		$consulta->bindValue(':id_pedido',$this->codigoAlfa, PDO::PARAM_STR);
 	    $consulta->execute();			
 	}
@@ -50,7 +53,7 @@ class Comanda
 	public function ConsultarPedido($codigo)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT tiempo FROM comandas WHERE id_comanda='$codigo'");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT tiempo_cocina FROM comandas WHERE id_comanda='$codigo'");
 		$consulta->execute();
 		$pedidoBuscado= $consulta->fetchObject('Comanda');
 		return $pedidoBuscado;
@@ -64,9 +67,10 @@ class Comanda
 		$consulta->execute();
 	}
 	
-	public function CargarHoraFin($id, $id_comanda){
+	public function CargarHoraFin($id){
+		$hora=date("H:i:s");
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		$fecha_fin=$objetoAccesoDato->RetornarConsulta("UPDATE comandas SET fecha_fin=NOW() WHERE id_mesa=$id and fecha_fin IS NULL");
+		$fecha_fin=$objetoAccesoDato->RetornarConsulta("UPDATE comandas SET hora_fin='$hora' WHERE id_mesa=$id");
 		$fecha_fin->execute();
 	}
 }

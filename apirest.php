@@ -8,6 +8,7 @@ require 'clases/AccesoDatos.php';
 require 'clases/comandaApi.php';
 require 'clases/usuario.php';
 require 'clases/usuarioApi.php';
+require 'clases/mesaApi.php';
 require 'clases/MWparaCORS.php';
 require 'clases/MWparaAutentificar.php';
 require_once 'clases/JWT.php';
@@ -31,11 +32,13 @@ $app->group('/comanda', function () {
 
   $this->post('/', \comandaApi::class . ':CargarUno');
 
-  $this->delete('/', \comandaApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . 'VerificarMozo');
+  $this->delete('/', \comandaApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':VerificarMozo');
 
   $this->put('/', \comandaApi::class . ':ModificarUno');
      
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
+//ver manera de que los trabadores vean q tipo de item es (cocina, bar, cerveza) y suban el tiempo estimado y lo marquen como recibido o algo asi
 
 $app->group('/usuario', function () {
  
@@ -45,21 +48,25 @@ $app->group('/usuario', function () {
   
 	$this->post('/', \usuarioApi::class . ':CargarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
-	$this->delete('/', \usuarioApi::class . ':BorrarUno');
+	$this->delete('/', \usuarioApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');;
   
 	$this->put('/', \usuarioApi::class . ':ModificarUno');
 	   
   })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
-  $app->group('/mesa', function(){
-	  $this->get('/', \mesaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
-
-	  $this->get('/{id_mesa}/', \mesaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
-
-	  $this->put('/', \mesaApi::class . ':ModificarUno');
-
-	  $this->delete('/', \mesaApi::class . ':BorrarUno')->add(\MWparaAutentificar::class, ':VerificarUsuario');
-  })->add(\MWparaCORS::class, ':HabilitarCORS8080');
+  $app->group('/mesa', function () {
+ 
+	$this->get('/', \mesaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+   
+	$this->get('/{id_mesa}/', \mesaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+  
+	$this->post('/', \mesaApi::class . ':CargarUno');
+  
+	$this->delete('/', \mesaApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+  
+	$this->put('/', \mesaApi::class . ':ModificarUno')->add(\MWparaAutentificar::class . ':VerificarMozo');
+	   
+  })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
 $app->post('/login/', function(Request $request, Response $response){
 	$datos = $request->getParsedBody();
@@ -70,7 +77,7 @@ $app->post('/login/', function(Request $request, Response $response){
 	$perfilJWT = $usuarioBuscado->perfil;
 	$areaJWT = $usuarioBuscado->area;
 	$data=array('Usuario'=>$nombre, 'Perfil'=>$perfilJWT, 'Area'=>$areaJWT);
-	$token= JsonWToken::LogIn($data); 
+	$token= JsonWToken::LogIn($data);
   	$newResponse = $response->withJson($token, 200); 
 	return $newResponse;	  
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');

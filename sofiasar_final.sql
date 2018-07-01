@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.9
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-06-2018 a las 19:26:26
--- Versión del servidor: 10.1.31-MariaDB
--- Versión de PHP: 7.2.3
+-- Tiempo de generación: 01-07-2018 a las 05:14:14
+-- Versión del servidor: 10.1.10-MariaDB
+-- Versión de PHP: 7.0.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -35,7 +33,9 @@ CREATE TABLE `comandas` (
   `foto_mesa` varchar(50) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `nombre_cliente` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
   `estado` varchar(80) COLLATE utf8_spanish2_ci DEFAULT NULL,
-  `tiempo` int(11) DEFAULT NULL,
+  `tiempo_cocina` int(11) DEFAULT NULL,
+  `tiempo_barra` int(11) DEFAULT NULL,
+  `tiempo_cerveza` int(11) DEFAULT NULL,
   `hora_inicio` time NOT NULL,
   `fecha` date NOT NULL,
   `hora_fin` time DEFAULT NULL
@@ -45,15 +45,15 @@ CREATE TABLE `comandas` (
 -- Volcado de datos para la tabla `comandas`
 --
 
-INSERT INTO `comandas` (`id_comanda`, `id_mesa`, `id_usuario`, `foto_mesa`, `nombre_cliente`, `estado`, `tiempo`, `hora_inicio`, `fecha`, `hora_fin`) VALUES
-('0akz6', 2, 0, NULL, 'prueba', NULL, NULL, '19:20:18', '0000-00-00', NULL),
-('0u41v', 2, 0, NULL, 'prueba', NULL, NULL, '19:15:52', '0000-00-00', NULL),
-('9cim0', 2, 3, NULL, 'Peblo', NULL, NULL, '00:00:00', '2024-06-18', NULL),
-('ha3cn', 2, 0, NULL, 'prueba', NULL, NULL, '19:19:16', '0000-00-00', NULL),
-('m2aqh', 2, 3, NULL, 'Olga', 'cancelado', 25, '22:19:31', '0000-00-00', NULL),
-('oyhqd', 2, 0, NULL, 'prueba', NULL, NULL, '19:16:53', '0000-00-00', NULL),
-('p1wvn', 2, 0, NULL, 'prueba', NULL, NULL, '19:15:22', '0000-00-00', NULL),
-('pt20n', 2, 0, NULL, 'prueba', NULL, NULL, '19:20:42', '0000-00-00', NULL);
+INSERT INTO `comandas` (`id_comanda`, `id_mesa`, `id_usuario`, `foto_mesa`, `nombre_cliente`, `estado`, `tiempo_cocina`, `tiempo_barra`, `tiempo_cerveza`, `hora_inicio`, `fecha`, `hora_fin`) VALUES
+('0akz6', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:20:18', '0000-00-00', '02:30:22'),
+('0u41v', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:15:52', '0000-00-00', '02:30:22'),
+('9cim0', 2, 3, NULL, 'Peblo', NULL, NULL, 0, 0, '00:00:00', '2024-06-18', '02:30:22'),
+('ha3cn', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:19:16', '0000-00-00', '02:30:22'),
+('m2aqh', 2, 3, NULL, 'Olga', 'cancelado', 25, 0, 0, '22:19:31', '0000-00-00', '02:30:22'),
+('oyhqd', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:16:53', '0000-00-00', '02:30:22'),
+('p1wvn', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:15:22', '0000-00-00', '02:30:22'),
+('pt20n', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:20:42', '0000-00-00', '02:30:22');
 
 -- --------------------------------------------------------
 
@@ -64,8 +64,25 @@ INSERT INTO `comandas` (`id_comanda`, `id_mesa`, `id_usuario`, `foto_mesa`, `nom
 CREATE TABLE `items` (
   `id_item` int(11) NOT NULL,
   `precio` float NOT NULL,
-  `descripcion` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
+  `descripcion` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `tipo` varchar(20) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `items`
+--
+
+INSERT INTO `items` (`id_item`, `precio`, `descripcion`, `tipo`) VALUES
+(1, 190, 'Pizza', 'comida'),
+(2, 25, 'Empanadas', 'comida'),
+(3, 40, 'Gaseosa 600', 'bar'),
+(4, 90, 'Gaseosa 2 lt.', 'bar'),
+(5, 90, 'Cerveza 1lt.', 'cerveza'),
+(6, 45, 'Cerveza lata', 'cerveza'),
+(7, 40, 'Budin de pan', 'comida'),
+(8, 40, 'Flan casero', 'comida'),
+(9, 90, 'Vino de la casa', 'bar'),
+(10, 130, 'Vino seleccion', 'bar');
 
 -- --------------------------------------------------------
 
@@ -101,6 +118,15 @@ CREATE TABLE `mesas` (
   `estado` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+--
+-- Volcado de datos para la tabla `mesas`
+--
+
+INSERT INTO `mesas` (`id_mesa`, `estado`) VALUES
+(2, 'Con clientes comiendo'),
+(5, 'Con cliente esperando pedido'),
+(5, 'Con cliente esperando pedido');
+
 -- --------------------------------------------------------
 
 --
@@ -113,19 +139,27 @@ CREATE TABLE `usuarios` (
   `apellido` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
   `usuario` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
   `perfil` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `area` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
+  `area` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `estado` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `usuario`, `perfil`, `area`) VALUES
-(1, 'sofia', 'sartori', 'sofiasar', 'socio', 'gerencia'),
-(2, 'pablo', 'arguimbau', 'pabloearg', 'socio', 'gerencia'),
-(3, 'mauro', 'sartori', 'maurosar', 'socio', 'gerencia'),
-(4, 'damian', 'mussi', 'dmussi', 'mozo', 'salon'),
-(5, 'livio', 'palmieri', 'lpalmieri', 'mozo', 'salon');
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `usuario`, `perfil`, `area`, `estado`) VALUES
+(1, 'sofia', 'sartori', 'sofiasar', 'socio', 'gerencia', 'activo'),
+(2, 'pablo', 'arguimbau', 'pabloearg', 'socio', 'gerencia', 'activo'),
+(3, 'mauro', 'sartori', 'maurosar', 'socio', 'gerencia', 'activo'),
+(4, 'damian', 'mussi', 'dmussi', 'mozo', 'salon', 'activo'),
+(5, 'livio', 'palmieri', 'lpalmieri', 'mozo', 'salon', 'activo'),
+(6, 'nicolas', 'lucchesi', 'nlucchesi', 'cervecero', 'barra', 'activo'),
+(7, 'micaela', 'cianflone', 'mcianflone', 'moza', 'salon', 'activo'),
+(8, 'lucas', 'mora', 'lmora', 'bartender', 'barra', 'activo'),
+(9, 'ivana', 'benitez', 'ibenitez', 'bartender', 'barra', 'activo'),
+(10, 'nicolas', 'lugosi', 'nlugosi', 'cervecero', 'barra', 'activo'),
+(11, 'carolina', 'rodriguez', 'crodriguez', 'cocinero', 'cocina', 'activo'),
+(12, 'celeste', 'waijer', 'cwaijer', 'cocinero', 'cocina', 'activo');
 
 --
 -- Índices para tablas volcadas
@@ -157,15 +191,12 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `items`
 --
 ALTER TABLE `items`
-  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-COMMIT;
-
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
