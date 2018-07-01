@@ -8,6 +8,7 @@ require 'clases/AccesoDatos.php';
 require 'clases/comandaApi.php';
 require 'clases/usuario.php';
 require 'clases/usuarioApi.php';
+require 'clases/trabajadorApi.php';
 require 'clases/mesaApi.php';
 require 'clases/MWparaCORS.php';
 require 'clases/MWparaAutentificar.php';
@@ -33,8 +34,6 @@ $app->group('/comanda', function () {
   $this->post('/', \comandaApi::class . ':CargarUno');
 
   $this->delete('/', \comandaApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':VerificarMozo');
-
-  $this->put('/', \comandaApi::class . ':ModificarUno');
      
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
@@ -80,6 +79,14 @@ $app->post('/login/', function(Request $request, Response $response){
 	$token= JsonWToken::LogIn($data);
   	$newResponse = $response->withJson($token, 200); 
 	return $newResponse;	  
+})->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
+$app->group('/pedidos', function (){
+	$this->get('/', \trabajadorApi::class . ':traerTodos' )->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
+	
+	$this->put('/', \trabajadorApi::class . ':ModificarUno')->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
+
+	$this->delete('/', \trabajadorApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 $app->run();
 

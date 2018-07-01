@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-07-2018 a las 05:14:14
+-- Tiempo de generación: 02-07-2018 a las 00:00:37
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.4
 
@@ -34,8 +34,11 @@ CREATE TABLE `comandas` (
   `nombre_cliente` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
   `estado` varchar(80) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `tiempo_cocina` int(11) DEFAULT NULL,
+  `estado_cocina` varchar(30) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `tiempo_barra` int(11) DEFAULT NULL,
+  `estado_barra` varchar(30) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `tiempo_cerveza` int(11) DEFAULT NULL,
+  `estado_cerveza` varchar(30) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `hora_inicio` time NOT NULL,
   `fecha` date NOT NULL,
   `hora_fin` time DEFAULT NULL
@@ -45,15 +48,15 @@ CREATE TABLE `comandas` (
 -- Volcado de datos para la tabla `comandas`
 --
 
-INSERT INTO `comandas` (`id_comanda`, `id_mesa`, `id_usuario`, `foto_mesa`, `nombre_cliente`, `estado`, `tiempo_cocina`, `tiempo_barra`, `tiempo_cerveza`, `hora_inicio`, `fecha`, `hora_fin`) VALUES
-('0akz6', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:20:18', '0000-00-00', '02:30:22'),
-('0u41v', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:15:52', '0000-00-00', '02:30:22'),
-('9cim0', 2, 3, NULL, 'Peblo', NULL, NULL, 0, 0, '00:00:00', '2024-06-18', '02:30:22'),
-('ha3cn', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:19:16', '0000-00-00', '02:30:22'),
-('m2aqh', 2, 3, NULL, 'Olga', 'cancelado', 25, 0, 0, '22:19:31', '0000-00-00', '02:30:22'),
-('oyhqd', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:16:53', '0000-00-00', '02:30:22'),
-('p1wvn', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:15:22', '0000-00-00', '02:30:22'),
-('pt20n', 2, 0, NULL, 'prueba', NULL, NULL, 0, 0, '19:20:42', '0000-00-00', '02:30:22');
+INSERT INTO `comandas` (`id_comanda`, `id_mesa`, `id_usuario`, `foto_mesa`, `nombre_cliente`, `estado`, `tiempo_cocina`, `estado_cocina`, `tiempo_barra`, `estado_barra`, `tiempo_cerveza`, `estado_cerveza`, `hora_inicio`, `fecha`, `hora_fin`) VALUES
+('0akz6', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:20:18', '0000-00-00', '02:30:22'),
+('0u41v', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:15:52', '0000-00-00', '02:30:22'),
+('9cim0', 2, 3, NULL, 'Peblo', NULL, NULL, NULL, 0, NULL, 0, NULL, '00:00:00', '2024-06-18', '02:30:22'),
+('ha3cn', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:19:16', '0000-00-00', '02:30:22'),
+('m2aqh', 2, 3, NULL, 'Olga', 'cancelado', 25, NULL, 0, NULL, 0, NULL, '22:19:31', '0000-00-00', '02:30:22'),
+('oyhqd', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:16:53', '0000-00-00', '02:30:22'),
+('p1wvn', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:15:22', '0000-00-00', '02:30:22'),
+('pt20n', 2, 0, NULL, 'prueba', 'En preparacion', 40, NULL, 5, NULL, 0, NULL, '19:20:42', '0000-00-00', '02:30:22');
 
 -- --------------------------------------------------------
 
@@ -154,7 +157,7 @@ INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `usuario`, `perfil`,
 (4, 'damian', 'mussi', 'dmussi', 'mozo', 'salon', 'activo'),
 (5, 'livio', 'palmieri', 'lpalmieri', 'mozo', 'salon', 'activo'),
 (6, 'nicolas', 'lucchesi', 'nlucchesi', 'cervecero', 'barra', 'activo'),
-(7, 'micaela', 'cianflone', 'mcianflone', 'moza', 'salon', 'activo'),
+(7, 'micaela', 'cianflone', 'mcianflone', 'mozo', 'salon', 'activo'),
 (8, 'lucas', 'mora', 'lmora', 'bartender', 'barra', 'activo'),
 (9, 'ivana', 'benitez', 'ibenitez', 'bartender', 'barra', 'activo'),
 (10, 'nicolas', 'lugosi', 'nlugosi', 'cervecero', 'barra', 'activo'),

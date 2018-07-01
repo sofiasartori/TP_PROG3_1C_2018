@@ -1,6 +1,7 @@
 <?php
 
 require_once("JWT.php");
+require_once("pedidos.php");
 class MWparaAutentificar
 {
  /**
@@ -100,5 +101,83 @@ class MWparaAutentificar
 		}
 		//$response->getBody()->write('<p>vuelvo del verificador de credenciales</p>');
 		return $response;   
+	}
+
+	public function DevolverTipoTrabajador($request, $response, $next){
+		$objResp= new stdclass();
+		$objResp->respuesta="";	
+		
+		  if($request->isGet())
+		  {
+		         
+			try{
+				$token=$request->getHeader('HTTP_RESTAURANTLOLO')[0];
+				JsonWToken::Checkear($token);
+				$objResp->esValido=true;
+			}
+			catch (Exception $e){
+				$objResp->excepcion=$e->getMessage();
+				$objResp->esValido=false;
+			}
+
+			if($objResp->esValido){
+				$payload=JsonWToken::ObtenerDatos($token);
+				$pedido = new Pedidos();
+				$pedido->pedidosPendientes($payload->Perfil);
+				
+			}
+			else{
+				$objResp="Solo usuarios registrados";
+				$objResp->elToken=$token;
+			}
+		}
+		else if($request->isPut()){
+			try{
+				$token=$request->getHeader('HTTP_RESTAURANTLOLO')[0];
+				JsonWToken::Checkear($token);
+				$objResp->esValido=true;
+			}
+			catch (Exception $e){
+				$objResp->excepcion=$e->getMessage();
+				$objResp->esValido=false;
+			}
+
+			if($objResp->esValido){
+				$payload=JsonWToken::ObtenerDatos($token);
+				PedidosApi::ModificarUno($request, $response, $payload->Perfil);
+				
+			}
+			else{
+				$objResp="Solo usuarios registrados";
+				$objResp->elToken=$token;
+			}
+		}
+		else if($request->isDelete()){
+			try{
+				$token=$request->getHeader('HTTP_RESTAURANTLOLO')[0];
+				JsonWToken::Checkear($token);
+				$objResp->esValido=true;
+			}
+			catch (Exception $e){
+				$objResp->excepcion=$e->getMessage();
+				$objResp->esValido=false;
+			}
+
+			if($objResp->esValido){
+				$payload=JsonWToken::ObtenerDatos($token);
+				PedidosApi::BorrarUno($request, $response, $payload->Perfil);
+				
+			}
+			else{
+				$objResp="Solo usuarios registrados";
+				$objResp->elToken=$token;
+			}
+		}
+		if($objResp->respuesta !=""){
+			$nueva=$response->withJson($objResp, 401);
+			return $nueva;
+		}
+		//$response->getBody()->write('<p>vuelvo del verificador de credenciales</p>');
+		return $response;
 	}
 }

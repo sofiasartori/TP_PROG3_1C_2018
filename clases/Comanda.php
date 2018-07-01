@@ -40,20 +40,15 @@ class Comanda
 		
 	}
 
-	public function EstablecerTiempo() 
+	public function EstablecerTiempo($perfil, $tiempo) 
 	{
-		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		//tal vez necesite hacer una clase que se llame trabajador o algo asi, para establecer los tiempos, aceptar los pedidos, etc y mas tablas
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set tiempo_cocina=:tiempo_cocina where id_comanda=:id_pedido");
-		$consulta->bindValue(':tiempo_cocina', $this->tiempo_cocina, PDO::PARAM_INT);
-		$consulta->bindValue(':id_pedido',$this->codigoAlfa, PDO::PARAM_STR);
-	    $consulta->execute();			
+        		
 	}
 
 	public function ConsultarPedido($codigo)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT tiempo_cocina FROM comandas WHERE id_comanda='$codigo'");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT tiempo_cocina, estado_cocina, tiempo_barra, estado_barra, tiempo_cerveza, estado_cerveza FROM comandas WHERE id_comanda='$codigo'");
 		$consulta->execute();
 		$pedidoBuscado= $consulta->fetchObject('Comanda');
 		return $pedidoBuscado;
@@ -70,7 +65,7 @@ class Comanda
 	public function CargarHoraFin($id){
 		$hora=date("H:i:s");
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		$fecha_fin=$objetoAccesoDato->RetornarConsulta("UPDATE comandas SET hora_fin='$hora' WHERE id_mesa=$id");
+		$fecha_fin=$objetoAccesoDato->RetornarConsulta("UPDATE comandas SET hora_fin='$hora', estado='Terminado' WHERE id_mesa=$id");
 		$fecha_fin->execute();
 	}
 }

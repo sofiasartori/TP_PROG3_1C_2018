@@ -46,16 +46,7 @@ class comandaApi extends Comanda implements IApiUsable
     }
     
     public function ModificarUno($request, $response, $args){
-        $ArrayDeParametros = $request->getParsedBody();
-        $tiempo= $ArrayDeParametros['tiempo'];
-        $codigo= $ArrayDeParametros['codigo'];
-                
-        $miPedido = new Comanda();
-        $miPedido->tiempo=$tiempo;
-        $miPedido->codigoAlfa=$codigo;
-        $miPedido->EstablecerTiempo();
-        $response->getBody()->write("Se estableció el tiempo estimado del pedido en ".$tiempo." minutos para la comanda ".$codigo);
-        return $response;
+        
     }
 
     public function TraerTodos($request, $response, $args){
