@@ -13,6 +13,7 @@ class Usuario
 	public $fecha_alta;
 	public $fecha_baja;
 	public $operaciones;
+	public $clave;
 
 
 	public function MostrarTodosDatos(){
@@ -101,10 +102,11 @@ class Usuario
 	public function InsertarUsuario()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into id6145613_final.usuarios (nombre, apellido, usuario, perfil, area, estado, fecha_alta)values(:nombre,:apellido, :usuario, :perfil, :area, 'activo', CURRENT_TIMESTAMP)");
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into id6145613_final.usuarios (nombre, apellido, usuario, clave, perfil, area, estado, fecha_alta)values(:nombre,:apellido, :usuario, :clave, :perfil, :area, 'activo', CURRENT_TIMESTAMP)");
 		$consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
 		$consulta->bindValue(':apellido', $this->apellido, PDO::PARAM_STR);
 		$consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
+		$consulta->bindValue(':clave', $this->clave, PDO::PARAM_STR);
 		$consulta->bindValue(':perfil', $this->perfil, PDO::PARAM_STR);
 		$consulta->bindValue(':area', $this->area, PDO::PARAM_STR);
 		$consulta->execute();

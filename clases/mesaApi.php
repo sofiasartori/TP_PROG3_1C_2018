@@ -53,11 +53,40 @@ class mesaApi extends Mesa implements IApiUsable
         $response->getBody()->write("Se cerró la mesa ".$id);
     }
 
+    public function FacturacionFechas($request, $response, $args){
+        $ArrayDeParametros = $request->getParsedBody();
+        $id = $ArrayDeParametros['mesa'];
+        $fecha_inicio=$ArrayDeParametros['fecha_inicio'];
+        $fecha_fin=$ArrayDeParametros['fecha_fin'];
+
+        $miMesa=new Mesa();
+        $miMesa->id_mesa=$id;
+        $miMesa->fecha_inicio=$fecha_inicio;
+        $miMesa->fecha_fin=$fecha_fin;
+        $miMesa->FacturaFechas();
+    }
+
     public function masUsada($request, $response, $args){
         Mesa::MesaMasUsada();
     }
 
     public function menosUsada($request, $response, $args){
         Mesa::MesaMenosUsada();
+    }
+
+    public function masFacturacion($request, $response, $args){
+        Mesa::MesaMasFacturacion();
+    }
+
+    public function menosFacturacion($request, $response, $args){
+        Mesa::MesaMenosFacturacion();
+    }
+
+    public function mejorComentario($request, $response, $args){
+        Mesa::MesaMejorComentario();
+    }
+
+    public function peorComentario($request, $response, $args){
+        Mesa::MesaPeorComentario();
     }
 }

@@ -19,6 +19,7 @@ class usuarioApi extends Usuario implements IApiUsable
         $nombre= $ArrayDeParametros['nombre'];
         $apellido= $ArrayDeParametros['apellido'];
         $usuario= $ArrayDeParametros['usuario'];
+        $clave=$ArrayDeParametros['clave'];
         $perfil= $ArrayDeParametros['perfil'];
         $area= $ArrayDeParametros['area'];
 
@@ -26,6 +27,7 @@ class usuarioApi extends Usuario implements IApiUsable
         $miUsuario->nombre=$nombre;
         $miUsuario->apellido=$apellido;
         $miUsuario->usuario=$usuario;
+        $miUsuario->clave=$clave;
         $miUsuario->perfil=$perfil;
         $miUsuario->area=$area;
         $miUsuario->InsertarUsuario();

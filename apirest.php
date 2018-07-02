@@ -13,6 +13,20 @@ require 'clases/mesaApi.php';
 require 'clases/MWparaCORS.php';
 require 'clases/MWparaAutentificar.php';
 require_once 'clases/JWT.php';
+/**
+   * @api {any} /MWparaAutenticar/  Verificar Usuario
+   * @apiVersion 0.1.0
+   * @apiName VerificarUsuario
+   * @apiGroup MIDDLEWARE
+   * @apiDescription  Por medio de este MiddleWare verifico las credeciales antes de ingresar al correspondiente metodo 
+   *
+   * @apiParam {ServerRequestInterface} request  El objeto REQUEST.
+ * @apiParam {ResponseInterface} response El objeto RESPONSE.
+ * @apiParam {Callable} next  The next middleware callable.
+   *
+   * @apiExample Como usarlo:
+   *    ->add(\MWparaAutenticar::class . ':VerificarUsuario')
+   */
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
@@ -39,9 +53,9 @@ $app->group('/comanda', function () {
 
 $app->group('/usuario', function () {
  
-	$this->get('/', \usuarioApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	$this->get('/', \usuarioApi::class . ':traerTodos')->add(\MWparaAutentificar::class . ':VerificarUsuario');
    
-	$this->get('/uno/{id_usuario}/', \usuarioApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	$this->get('/uno/{id_usuario}/', \usuarioApi::class . ':traerUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 
 	$this->get('/dias/', \usuarioApi::class . ':GetDias')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 
@@ -61,13 +75,23 @@ $app->group('/usuario', function () {
 
   $app->group('/mesa', function () {
  
-	$this->get('/', \mesaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	$this->get('/', \mesaApi::class . ':traerTodos')->add(\MWparaAutentificar::class . ':VerificarUsuario');
    
-	$this->get('/{id_mesa}/', \mesaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	$this->get('/{id_mesa}/', \mesaApi::class . ':traerUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	
 	$this->get('/mesas/masUsada/', \mesaApi::class . ':masUsada')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+
+	$this->get('/mesas/masFacturacion/', \mesaApi::class . ':masFacturacion')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+
+	$this->get('/mesas/menosFacturacion/', \mesaApi::class . ':masFacturacion')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	
+	$this->get('/mesas/mejorComentario/', \mesaApi::class . ':mejorComentario')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+
+	$this->get('/mesas/peorComentario/', \mesaApi::class . ':peorComentario')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+
 	$this->get('/mesas/menosUsada/', \mesaApi::class . ':menosUsada')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+
+	$this->post('/facturacion/', \mesaApi::class . ':FacturacionFechas')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
 	$this->post('/', \mesaApi::class . ':CargarUno');
   
