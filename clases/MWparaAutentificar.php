@@ -144,7 +144,7 @@ class MWparaAutentificar
 
 			if($objResp->esValido){
 				$payload=JsonWToken::ObtenerDatos($token);
-				PedidosApi::ModificarUno($request, $response, $payload->Perfil);
+				PedidosApi::ModificarUno($request, $response, $payload);
 				
 			}
 			else{

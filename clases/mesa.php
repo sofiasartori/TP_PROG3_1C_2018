@@ -18,7 +18,7 @@ class Mesa
 	public function AbrirMesa() 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into mesas values(:id, 'Con cliente esperando pedido')");
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas set estado='Con cliente esperando pedido' where id_mesa=:id");
 		$consulta->bindValue(':id',$this->id_mesa, PDO::PARAM_INT);
 		$consulta->execute();							
 	}
@@ -47,8 +47,28 @@ class Mesa
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM mesas");
 		$consulta->execute();
-		//quiero ver que trae la consulta, si es un array armo el codigo para hacer una tabla 
-		var_dump($consulta);
+		$tabla ='<table style="border:1px solid black;"><tr><th>Mesa</th><th>Estado</th></tr>';
+		while($i=$consulta->fetch()){
+			$tabla = $tabla.'<tr><td>'.$i['id_mesa'].'</td>
+					   <td>'.$i['estado'].'</td></tr>';
+		}
+		$tabla =$tabla.'</table>';
+		echo $tabla;
 	}
- 
+
+	public function MesaMasUsada(){
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT m.id_mesa, COUNT(c.id_mesa) as 'Suma' FROM mesas as m JOIN comandas as c ON (m.id_mesa=c.id_mesa) GROUP BY c.id_mesa ORDER BY COUNT(c.id_mesa) DESC");
+		$consulta->execute();
+		$mesaBuscada= $consulta->fetchObject('Mesa');
+		echo "La mesa más usada fue la mesa ".$mesaBuscada->id_mesa;
+	}
+	
+	public function MesaMenosUsada(){
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT m.id_mesa, COUNT(c.id_mesa) as 'Suma' FROM mesas as m JOIN comandas as c ON (m.id_mesa=c.id_mesa) GROUP BY c.id_mesa ORDER BY COUNT(c.id_mesa) ASC");
+		$consulta->execute();
+		$mesaBuscada= $consulta->fetchObject('Mesa');
+		echo "La mesa menos usada fue la mesa ".$mesaBuscada->id_mesa;
+	}
 }

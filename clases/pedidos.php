@@ -13,6 +13,7 @@ class Pedidos
 	public $estado;
 	public $id_item;
 	public $id_descripcion;
+	public $operaciones;
 
 	public function CompletarEncuesta(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
@@ -39,14 +40,20 @@ class Pedidos
 		
 	}
 
-	public function EstablecerTiempo($perfil) 
+	public function EstablecerTiempo($perfil, $nombre) 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
         if($perfil=='cocinero') {
 			$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set tiempo_cocina=:tiempo, estado_cocina='En preparacion' where id_comanda=:id_pedido");
             $consulta->bindValue(':tiempo',$this->tiempo, PDO::PARAM_INT);
             $consulta->bindValue(':id_pedido',$this->codigoAlfa, PDO::PARAM_STR);            
-	        $consulta->execute();			
+			$consulta->execute();
+			$cantOper=$objetoAccesoDato->RetornarConsulta("SELECT operaciones from usuarios where usuario='$nombre'");
+			$cantOper->execute();
+			$cantidad= $cantOper->fetchObject('Pedidos');
+			var_dump($cantidad);
+			$operaciones=$objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET operaciones=$cantidad->operaciones + 1 where usuario='$nombre'");
+			$operaciones->execute();
         }
 		else if($perfil=='cervecero') {
             $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set tiempo_cerveza=:tiempo, estado_cerveza='En preparacion' where id_comanda=:id_pedido");
@@ -106,20 +113,18 @@ class Pedidos
 	
 	public function MasVendidos(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		//revisar que no esta devolviendo bien las cantidades
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT i.id_item, i.descripcion, count(c.cantidad) as 'Cantidades' from items as i JOIN itemsxcomanda as c ON (i.id_item=c.id_item) group by c.cantidad order by COUNT(c.cantidad) DESC limit 1");		
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT i.id_item, i.descripcion, SUM(c.cantidad) as 'Suma' from items as i JOIN itemsxcomanda as c ON (i.id_item=c.id_item) group by i.id_item ORDER BY COUNT(c.id_item) DESC");		
 		$consulta->execute();
 		$pedidoBuscado= $consulta->fetchObject('Pedidos');
-		echo "Producto más vendido: Se vendieron ".$pedidoBuscado->Cantidades." unidades de ".$pedidoBuscado->descripcion." en total";
+		echo "Producto más vendido: Se vendieron ".$pedidoBuscado->Suma." unidades de ".$pedidoBuscado->descripcion." en total";
 	}
 
 	public function MenosVendidos(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		//revisar que no esta devolviendo bien las cantidades
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT i.id_item, i.descripcion, count(c.cantidad) as 'Cantidades' from items as i JOIN itemsxcomanda as c ON (i.id_item=c.id_item) group by c.cantidad order by COUNT(c.cantidad) DESC limit 1");		
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT i.id_item, i.descripcion, SUM(c.cantidad) as 'Suma' from items as i JOIN itemsxcomanda as c ON (i.id_item=c.id_item) group by i.id_item ORDER BY COUNT(c.id_item) ASC");		
 		$consulta->execute();
 		$pedidoBuscado= $consulta->fetchObject('Pedidos');
-		echo "Producto más vendido: Se vendieron ".$pedidoBuscado->Cantidades." unidades de ".$pedidoBuscado->descripcion." en total";
+		echo "Producto menos vendido: Se vendieron ".$pedidoBuscado->Suma." unidades de ".$pedidoBuscado->descripcion." en total";
 	}
 
 	public function Cancelados(){

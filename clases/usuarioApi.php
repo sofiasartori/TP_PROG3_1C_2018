@@ -64,7 +64,24 @@ class usuarioApi extends Usuario implements IApiUsable
         $miUsuario=Usuario::MostrarDias();
     }
 
-    public function GetOperaciones ($request, $response, $args){
-        $miUsuario=Usuario::MostrarOperaciones();
+    public function GetOperacionesArea ($request, $response, $args){
+        $area=$args['area'];
+        $miUsuario=new Usuario();
+        $miUsuario->area=$area;
+        $miUsuario->MostrarOperacionesArea();
+    }
+
+    public function GetOperacionesAreaEmpleado ($request, $response, $args){
+        $area=$args['area'];
+        $miUsuario=new Usuario();
+        $miUsuario->area=$area;
+        $miUsuario->MostrarOperacionesAreaEmpleado();
+    }
+
+    public function GetOperacionesEmpleado ($request, $response, $args){
+        $usuario=$args['usuario'];
+        $miUsuario=new Usuario();
+        $miUsuario->usuario=$usuario;
+        $miUsuario->MostrarOperacionesEmpleado();
     }
 }

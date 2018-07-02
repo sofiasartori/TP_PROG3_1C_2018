@@ -37,10 +37,8 @@ class comandaApi extends Comanda implements IApiUsable
         $miPedido->mesa=$id_mesa;
         $miPedido->mozo=$id_usuario;
         //$miPedido->foto=$foto_mesa;
-        $miPedido->nombre_cliente=$nombre_cliente;
-        
-        $miPedido->TomarPedido($items);
-        
+        $miPedido->nombre_cliente=$nombre_cliente;        
+        $miPedido->TomarPedido($items);        
         $response->getBody()->write("Pedido tomado, el codigo es: ".$id_comanda);
         return $response;
     }

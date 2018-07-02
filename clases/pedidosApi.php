@@ -11,7 +11,11 @@ class pedidosApi extends Pedidos implements IApiUsable
     }
 
     public function MasVendidos() {
-        $miPedido=Pedidos::MasVendidos();
+        Pedidos::MasVendidos();
+    }
+
+    public function MenosVendidos() {
+        Pedidos::MenosVendidos();
     }
 
     public function CargarUno($request, $response, $args) {
@@ -54,7 +58,7 @@ class pedidosApi extends Pedidos implements IApiUsable
         $miPedido = new Pedidos();
         $miPedido->codigoAlfa=$codigo;
         $miPedido->tiempo=$tiempo;
-        $miPedido->EstablecerTiempo($args);
+        $miPedido->EstablecerTiempo($args->Perfil, $args->Usuario);
         $response->getBody()->write("Se estableció el tiempo estimado del pedido en ".$tiempo." minutos para la comanda ".$codigo);
         return $response;
     }

@@ -24,7 +24,6 @@ $app = new \Slim\App(["settings" => $config]);
 
 $app = new App();*/
 
-/*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
 $app->group('/comanda', function () {
  
   $this->get('/', \comandaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
@@ -37,7 +36,6 @@ $app->group('/comanda', function () {
      
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
-//ver manera de que los trabadores vean q tipo de item es (cocina, bar, cerveza) y suban el tiempo estimado y lo marquen como recibido o algo asi
 
 $app->group('/usuario', function () {
  
@@ -47,9 +45,11 @@ $app->group('/usuario', function () {
 
 	$this->get('/dias/', \usuarioApi::class . ':GetDias');
 
-	$this->get('/operaciones/', \usuarioApi::class . ':GetOperaciones');
+	$this->get('/operaciones/area/{area}', \usuarioApi::class . ':GetOperacionesArea');
 	
-	$this->get('/operaciones/{id_usuario}', \usuarioApi::class . ':getOperacionesPorUser');
+	$this->get('/operaciones/areaEmpleado/{area}', \usuarioApi::class . ':getOperacionesAreaEmpleado');
+
+	$this->get('/operaciones/empleado/{usuario}', \usuarioApi::class . ':getOperacionesEmpleado');
   
 	$this->post('/', \usuarioApi::class . ':CargarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
@@ -64,6 +64,10 @@ $app->group('/usuario', function () {
 	$this->get('/', \mesaApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
    
 	$this->get('/{id_mesa}/', \mesaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	
+	$this->get('/mesas/masUsada/', \mesaApi::class . ':masUsada')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	
+	$this->get('/mesas/menosUsada/', \mesaApi::class . ':menosUsada')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
   
 	$this->post('/', \mesaApi::class . ':CargarUno');
   
@@ -93,7 +97,9 @@ $app->post('/login/', function(Request $request, Response $response){
 $app->group('/pedidos', function (){
 	$this->get('/', \pedidosApi::class . ':traerTodos' )->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
 	
-	$this->get('/vendidos/', \pedidosApi::class . ':MasVendidos' );
+	$this->get('/masVendidos/', \pedidosApi::class . ':MasVendidos' );
+
+	$this->get('/menosVendidos/', \pedidosApi::class . ':MenosVendidos' );
 	
 	$this->get('/cancelados/', \pedidosApi::class . ':TraerCancelados' );
 	
@@ -105,4 +111,4 @@ $app->group('/pedidos', function (){
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 $app->run();
 
-/*Falta 7-b, 7-c, 7-d,, 8-b, 8-c, todo el 9 */
+/*Falta desde el 9-c en adelante */

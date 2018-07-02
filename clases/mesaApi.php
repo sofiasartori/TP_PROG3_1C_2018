@@ -21,7 +21,6 @@ class mesaApi extends Mesa implements IApiUsable
         $miMesa->id_mesa=$id;
         $miMesa->AbrirMesa();
         $response->getBody()->write("Se abrió la mesa ".$id);
-
         return $response;
     }
     
@@ -42,7 +41,6 @@ class mesaApi extends Mesa implements IApiUsable
 
     public function TraerTodos($request, $response, $args){
         $consulta= Mesa::traerTodasLasMesas();
-        $response = $response->withJson($id, 200);
     }
     
     public function BorrarUno($request, $response, $args){
@@ -53,5 +51,13 @@ class mesaApi extends Mesa implements IApiUsable
         $miMesa->id_mesa=$id;
         $miMesa->CerrarMesa();
         $response->getBody()->write("Se cerró la mesa ".$id);
+    }
+
+    public function masUsada($request, $response, $args){
+        Mesa::MesaMasUsada();
+    }
+
+    public function menosUsada($request, $response, $args){
+        Mesa::MesaMenosUsada();
     }
 }

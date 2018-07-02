@@ -12,11 +12,12 @@ class Usuario
 	public $ult_fecha_log;
 	public $fecha_alta;
 	public $fecha_baja;
+	public $operaciones;
 
 
 	public function MostrarTodosDatos(){
 		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoPDO->RetornarConsulta("select nombre, apellido, usuario, perfil, area, estado, ult_fecha_log, fecha_alta, fecha_baja from usuarios");
+		$consulta =$objetoPDO->RetornarConsulta("select nombre, apellido, usuario, perfil, area, estado, ult_fecha_log, fecha_alta, fecha_baja, operaciones from usuarios");
 		$consulta->execute();		
 		$tabla ='<table style="border:1px solid black;"><tr><th>Nombre</th><th>Apellido</th><th>Usuario</th><th>Perfil</th><th>Area</th><th>Estado</th><th>Fecha ult log</th><th>Fecha alta</th><th>Fecha baja</th></tr>';
 		while($i=$consulta->fetch()){
@@ -28,7 +29,8 @@ class Usuario
 					   <td>'.$i['estado'].'</td>
 					   <td>'.$i['ult_fecha_log'].'</td>
 					   <td>'.$i['fecha_alta'].'</td>
-					   <td>'.$i['fecha_baja'].'</td></tr>';
+					   <td>'.$i['fecha_baja'].'</td>
+					   <td>'.$i['operaciones'].'</td></tr>';
 		}
 		$tabla =$tabla.'</table>';
 		echo $tabla;
@@ -49,19 +51,42 @@ class Usuario
 		echo $tabla;
 	}
 
-	public function MostrarOperaciones(){
+	public function MostrarOperacionesArea(){
 		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoPDO->RetornarConsulta("SELECT u.usuario from usuarios as u join comandas as c on (c.mozo=u.id_usuario)");
+		$consulta =$objetoPDO->RetornarConsulta("SELECT area, operaciones from usuarios WHERE area=:area");
+		$consulta->bindValue(':area', $this->area, PDO::PARAM_STR);
 		$consulta->execute();		
-		$tabla ='<table style="border:1px solid black;"><tr><th>Usuario</th><th>Fecha ult log</th><th>Fecha alta</th><th>Fecha baja</th></tr>';
+		$tabla ='<table style="border:1px solid black;"><tr><th>Usuario</th><th>Area</th><th>Operaciones</th></tr>';
 		while($i=$consulta->fetch()){
-			$tabla = $tabla.'<tr><td>'.$i['usuario'].'</td>
-					   <td>'.$i['ult_fecha_log'].'</td>
-					   <td>'.$i['fecha_alta'].'</td>
-					   <td>'.$i['fecha_baja'].'</td></tr>';
+			$tabla = $tabla.'<tr><td>'.$i['area'].'</td>
+					   <td>'.$i['operaciones'].'</td></tr>';
 		}
 		$tabla =$tabla.'</table>';
 		echo $tabla;
+	}
+
+	public function MostrarOperacionesAreaEmpleado(){
+		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
+		$consulta =$objetoPDO->RetornarConsulta("SELECT usuario, area, operaciones from usuarios WHERE area=:area");
+		$consulta->bindValue(':area', $this->area, PDO::PARAM_STR);
+		$consulta->execute();		
+		$tabla ='<table style="border:1px solid black;"><tr><th>Usuario</th><th>Area</th><th>Operaciones</th></tr>';
+		while($i=$consulta->fetch()){
+			$tabla = $tabla.'<tr><td>'.$i['usuario'].'</td>
+					   <td>'.$i['area'].'</td>
+					   <td>'.$i['operaciones'].'</td></tr>';
+		}
+		$tabla =$tabla.'</table>';
+		echo $tabla;
+	}
+
+	public function MostrarOperacionesEmpleado(){
+		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
+		$consulta =$objetoPDO->RetornarConsulta("SELECT usuario, operaciones from usuarios WHERE usuario=:usuario");
+		$consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
+		$consulta->execute();		
+		$cantidad= $consulta->fetchObject('Usuario');
+		echo "El usuario ".$cantidad->usuario." realizó ".$cantidad->operaciones." operaciones";
 	}
 
 	public function TraerUnUsuario($usuario) 
