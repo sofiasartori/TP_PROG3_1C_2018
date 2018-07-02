@@ -4,6 +4,8 @@ require_once 'IApiUsable.php';
 
 class usuarioApi extends Usuario implements IApiUsable
 {
+
+    //ver por que no me dice nada si pongo un usuario q no existe
  	
      public function TraerUno($request, $response, $args) {
         $usuario=$args['usuario'];
@@ -27,7 +29,7 @@ class usuarioApi extends Usuario implements IApiUsable
         $miUsuario->perfil=$perfil;
         $miUsuario->area=$area;
         $miUsuario->InsertarUsuario();
-        $response->getBody()->write("Se insertó el usuario");
+        $response->getBody()->write("Se insertó el usuario ".$usuario);
 
         return $response;
     }
@@ -55,7 +57,14 @@ class usuarioApi extends Usuario implements IApiUsable
     }
 
     public function TraerTodos($request, $response, $args){
-        
+        $miUsuario=Usuario::MostrarTodosDatos();
     }
-        
+     
+    public function GetDias($request, $response, $args){
+        $miUsuario=Usuario::MostrarDias();
+    }
+
+    public function GetOperaciones ($request, $response, $args){
+        $miUsuario=Usuario::MostrarOperaciones();
+    }
 }

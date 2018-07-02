@@ -6,17 +6,10 @@ class Comanda
  	public $mozo;
   	public $foto;
 	public $nombre_cliente;
-    public $estado;
 	public $tiempo_cocina;
 	public $tiempo_barra;
 	public $tiempo_cerveza;
-    public $hora_inicio;
-    public $fecha;
-	public $hora_fin;
 	public $codigoAlfa;
-	public $items;
-	public $cantidad;
-
 
 	public function TomarPedido($items){
 		$fecha=date("Y-m-d");
@@ -38,11 +31,6 @@ class Comanda
 			$itemsComanda->execute();
 		}
 		
-	}
-
-	public function EstablecerTiempo($perfil, $tiempo) 
-	{
-        		
 	}
 
 	public function ConsultarPedido($codigo)

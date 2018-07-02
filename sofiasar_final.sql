@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-07-2018 a las 00:00:37
+-- Tiempo de generación: 02-07-2018 a las 06:05:13
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.4
 
@@ -52,11 +52,33 @@ INSERT INTO `comandas` (`id_comanda`, `id_mesa`, `id_usuario`, `foto_mesa`, `nom
 ('0akz6', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:20:18', '0000-00-00', '02:30:22'),
 ('0u41v', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:15:52', '0000-00-00', '02:30:22'),
 ('9cim0', 2, 3, NULL, 'Peblo', NULL, NULL, NULL, 0, NULL, 0, NULL, '00:00:00', '2024-06-18', '02:30:22'),
-('ha3cn', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:19:16', '0000-00-00', '02:30:22'),
+('ha3cn', 2, 0, NULL, 'prueba', 'Terminado', NULL, NULL, 0, NULL, 0, NULL, '19:19:16', '0000-00-00', '02:30:22'),
 ('m2aqh', 2, 3, NULL, 'Olga', 'cancelado', 25, NULL, 0, NULL, 0, NULL, '22:19:31', '0000-00-00', '02:30:22'),
 ('oyhqd', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:16:53', '0000-00-00', '02:30:22'),
 ('p1wvn', 2, 0, NULL, 'prueba', NULL, NULL, NULL, 0, NULL, 0, NULL, '19:15:22', '0000-00-00', '02:30:22'),
 ('pt20n', 2, 0, NULL, 'prueba', 'En preparacion', 40, NULL, 5, NULL, 0, NULL, '19:20:42', '0000-00-00', '02:30:22');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `encuestas`
+--
+
+CREATE TABLE `encuestas` (
+  `id_comanda` varchar(5) COLLATE utf8_spanish2_ci NOT NULL,
+  `mesa` int(11) NOT NULL,
+  `mozo` int(11) NOT NULL,
+  `restaurant` int(11) NOT NULL,
+  `cocinero` int(11) NOT NULL,
+  `comentario` varchar(66) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `encuestas`
+--
+
+INSERT INTO `encuestas` (`id_comanda`, `mesa`, `mozo`, `restaurant`, `cocinero`, `comentario`) VALUES
+('ha3cn', 4, 4, 4, 4, 'hola, muy bueno');
 
 -- --------------------------------------------------------
 
@@ -143,26 +165,33 @@ CREATE TABLE `usuarios` (
   `usuario` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
   `perfil` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
   `area` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `estado` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
+  `estado` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `ult_fecha_log` datetime DEFAULT NULL,
+  `fecha_alta` datetime NOT NULL,
+  `fecha_baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `usuario`, `perfil`, `area`, `estado`) VALUES
-(1, 'sofia', 'sartori', 'sofiasar', 'socio', 'gerencia', 'activo'),
-(2, 'pablo', 'arguimbau', 'pabloearg', 'socio', 'gerencia', 'activo'),
-(3, 'mauro', 'sartori', 'maurosar', 'socio', 'gerencia', 'activo'),
-(4, 'damian', 'mussi', 'dmussi', 'mozo', 'salon', 'activo'),
-(5, 'livio', 'palmieri', 'lpalmieri', 'mozo', 'salon', 'activo'),
-(6, 'nicolas', 'lucchesi', 'nlucchesi', 'cervecero', 'barra', 'activo'),
-(7, 'micaela', 'cianflone', 'mcianflone', 'mozo', 'salon', 'activo'),
-(8, 'lucas', 'mora', 'lmora', 'bartender', 'barra', 'activo'),
-(9, 'ivana', 'benitez', 'ibenitez', 'bartender', 'barra', 'activo'),
-(10, 'nicolas', 'lugosi', 'nlugosi', 'cervecero', 'barra', 'activo'),
-(11, 'carolina', 'rodriguez', 'crodriguez', 'cocinero', 'cocina', 'activo'),
-(12, 'celeste', 'waijer', 'cwaijer', 'cocinero', 'cocina', 'activo');
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `usuario`, `perfil`, `area`, `estado`, `ult_fecha_log`, `fecha_alta`, `fecha_baja`) VALUES
+(1, 'sofia', 'sartori', 'sofiasar', 'socio', 'gerencia', 'activo', '2018-07-01 23:41:20', '0000-00-00 00:00:00', NULL),
+(2, 'pablo', 'arguimbau', 'pabloearg', 'socio', 'gerencia', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(3, 'mauro', 'sartori', 'maurosar', 'socio', 'gerencia', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(4, 'damian', 'mussi', 'dmussi', 'mozo', 'salon', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(5, 'livio', 'palmieri', 'lpalmieri', 'mozo', 'salon', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(6, 'nicolas', 'lucchesi', 'nlucchesi', 'cervecero', 'barra', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(7, 'micaela', 'cianflone', 'mcianflone', 'mozo', 'salon', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(8, 'lucas', 'mora', 'lmora', 'bartender', 'barra', 'activo', '2018-07-01 23:37:09', '0000-00-00 00:00:00', NULL),
+(9, 'ivana', 'benitez', 'ibenitez', 'bartender', 'barra', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(10, 'nicolas', 'lugosi', 'nlugosi', 'cervecero', 'barra', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(11, 'carolina', 'rodriguez', 'crodriguez', 'cocinero', 'cocina', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(12, 'celeste', 'waijer', 'cwaijer', 'cocinero', 'cocina', 'suspendido', NULL, '0000-00-00 00:00:00', NULL),
+(13, 'celeste', 'arce', 'carce', 'cocinero', 'cocina', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(14, 'beatriz', 'rossi', 'brossi', 'bartender', 'barra', 'activo', NULL, '0000-00-00 00:00:00', NULL),
+(15, 'jonatan', 'castro', 'jcastro', 'cervecero', 'barra', 'activo', NULL, '2018-07-01 23:55:02', NULL),
+(16, 'analia', 'zurita', 'azurita', 'cocinero', 'cocina', 'borrado', NULL, '2018-07-01 23:55:58', '2018-07-01 23:56:15');
 
 --
 -- Índices para tablas volcadas
@@ -199,7 +228,7 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

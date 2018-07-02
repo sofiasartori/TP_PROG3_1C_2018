@@ -50,18 +50,15 @@ class comandaApi extends Comanda implements IApiUsable
     }
 
     public function TraerTodos($request, $response, $args){
-        $consulta= Mesa::traerTodasLasMesas();
-        $response = $response->withJson($id, 200);
+        
     }
     
     public function BorrarUno($request, $response, $args){
         $ArrayDeParametros = $request->getParsedBody();
         $codigo = $ArrayDeParametros['codigo'];
-        //$id_mozo= $ArrayDeParametros['usuario'];
-        //tengo que verificar q el usuario es un mozo, JWT->getPayload
+        
         $miPedido=new Comanda();
         $miPedido->codigoAlfa=$codigo;
-        //$miPedido->mozo=$id_mozo;
         $miPedido->CancelarPedido();
         $response->getBody()->write("Se canceló el pedido ".$codigo);
     }

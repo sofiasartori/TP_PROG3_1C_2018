@@ -8,7 +8,7 @@ require 'clases/AccesoDatos.php';
 require 'clases/comandaApi.php';
 require 'clases/usuario.php';
 require 'clases/usuarioApi.php';
-require 'clases/trabajadorApi.php';
+require 'clases/pedidosApi.php';
 require 'clases/mesaApi.php';
 require 'clases/MWparaCORS.php';
 require 'clases/MWparaAutentificar.php';
@@ -43,13 +43,19 @@ $app->group('/usuario', function () {
  
 	$this->get('/', \usuarioApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
    
-	$this->get('/{id_usuario}/', \usuarioApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	$this->get('/uno/{id_usuario}/', \usuarioApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+
+	$this->get('/dias/', \usuarioApi::class . ':GetDias');
+
+	$this->get('/operaciones/', \usuarioApi::class . ':GetOperaciones');
+	
+	$this->get('/operaciones/{id_usuario}', \usuarioApi::class . ':getOperacionesPorUser');
   
 	$this->post('/', \usuarioApi::class . ':CargarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
-	$this->delete('/', \usuarioApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');;
+	$this->delete('/', \usuarioApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
-	$this->put('/', \usuarioApi::class . ':ModificarUno');
+	$this->put('/', \usuarioApi::class . ':ModificarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	   
   })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
@@ -76,17 +82,27 @@ $app->post('/login/', function(Request $request, Response $response){
 	$perfilJWT = $usuarioBuscado->perfil;
 	$areaJWT = $usuarioBuscado->area;
 	$data=array('Usuario'=>$nombre, 'Perfil'=>$perfilJWT, 'Area'=>$areaJWT);
+	$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+	$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios set ult_fecha_log=CURRENT_TIMESTAMP where usuario='$nombre'");
+	$consulta->execute();
 	$token= JsonWToken::LogIn($data);
   	$newResponse = $response->withJson($token, 200); 
 	return $newResponse;	  
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
 $app->group('/pedidos', function (){
-	$this->get('/', \trabajadorApi::class . ':traerTodos' )->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
+	$this->get('/', \pedidosApi::class . ':traerTodos' )->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
 	
-	$this->put('/', \trabajadorApi::class . ':ModificarUno')->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
+	$this->get('/vendidos/', \pedidosApi::class . ':MasVendidos' );
+	
+	$this->get('/cancelados/', \pedidosApi::class . ':TraerCancelados' );
+	
+	$this->put('/', \pedidosApi::class . ':ModificarUno')->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
 
-	$this->delete('/', \trabajadorApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
+	$this->post('/', \pedidosApi::class . ':CargarUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+
+	$this->delete('/', \pedidosApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 $app->run();
 
+/*Falta 7-b, 7-c, 7-d,, 8-b, 8-c, todo el 9 */
