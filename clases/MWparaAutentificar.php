@@ -35,7 +35,7 @@ class MWparaAutentificar
 					$objResp->esValido=true;
 				}
 				catch (Exception $e){
-					//$objResp->excepcion=$e->getMessage();
+					$objResp->excepcion=$e->getMessage();
 					$objResp->esValido=false;
 				}
 

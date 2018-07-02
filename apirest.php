@@ -43,13 +43,13 @@ $app->group('/usuario', function () {
    
 	$this->get('/uno/{id_usuario}/', \usuarioApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
-	$this->get('/dias/', \usuarioApi::class . ':GetDias');
+	$this->get('/dias/', \usuarioApi::class . ':GetDias')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 
-	$this->get('/operaciones/area/{area}', \usuarioApi::class . ':GetOperacionesArea');
+	$this->get('/operaciones/area/{area}', \usuarioApi::class . ':GetOperacionesArea')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	
-	$this->get('/operaciones/areaEmpleado/{area}', \usuarioApi::class . ':getOperacionesAreaEmpleado');
+	$this->get('/operaciones/areaEmpleado/{area}', \usuarioApi::class . ':getOperacionesAreaEmpleado')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 
-	$this->get('/operaciones/empleado/{usuario}', \usuarioApi::class . ':getOperacionesEmpleado');
+	$this->get('/operaciones/empleado/{usuario}', \usuarioApi::class . ':getOperacionesEmpleado')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
 	$this->post('/', \usuarioApi::class . ':CargarUno')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
@@ -65,9 +65,9 @@ $app->group('/usuario', function () {
    
 	$this->get('/{id_mesa}/', \mesaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 	
-	$this->get('/mesas/masUsada/', \mesaApi::class . ':masUsada')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	$this->get('/mesas/masUsada/', \mesaApi::class . ':masUsada')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	
-	$this->get('/mesas/menosUsada/', \mesaApi::class . ':menosUsada')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+	$this->get('/mesas/menosUsada/', \mesaApi::class . ':menosUsada')->add(\MWparaAutentificar::class . ':VerificarUsuario');
   
 	$this->post('/', \mesaApi::class . ':CargarUno');
   
@@ -80,28 +80,34 @@ $app->group('/usuario', function () {
 $app->post('/login/', function(Request $request, Response $response){
 	$datos = $request->getParsedBody();
 	$nombre=$datos['usuario'];
-	
+	$clave=$datos['clave'];
 	$usuario=new Usuario();
-	$usuarioBuscado=$usuario->TraerUnUsuario($nombre);
+	$usuarioBuscado=$usuario->TraerUnUsuario($nombre, $clave);
 	$perfilJWT = $usuarioBuscado->perfil;
 	$areaJWT = $usuarioBuscado->area;
 	$data=array('Usuario'=>$nombre, 'Perfil'=>$perfilJWT, 'Area'=>$areaJWT);
 	$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-	$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios set ult_fecha_log=CURRENT_TIMESTAMP where usuario='$nombre'");
+	$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE id6145613_final.usuarios set ult_fecha_log=CURRENT_TIMESTAMP where usuario='$nombre'");
 	$consulta->execute();
-	$token= JsonWToken::LogIn($data);
-  	$newResponse = $response->withJson($token, 200); 
+	if(!isset($data['Perfil'])){
+		$newResponse = $response->withJSON("Usted no pertenece al sistema", 400);
+	}
+	else{
+		$token= JsonWToken::LogIn($data);
+  		$newResponse = $response->withJson($token, 200); 
+	}
 	return $newResponse;	  
+	
 })->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
 $app->group('/pedidos', function (){
 	$this->get('/', \pedidosApi::class . ':traerTodos' )->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
 	
-	$this->get('/masVendidos/', \pedidosApi::class . ':MasVendidos' );
+	$this->get('/masVendidos/', \pedidosApi::class . ':MasVendidos' )->add(\MWparaAutentificar::class . ':VerificarUsuario');
 
-	$this->get('/menosVendidos/', \pedidosApi::class . ':MenosVendidos' );
+	$this->get('/menosVendidos/', \pedidosApi::class . ':MenosVendidos' )->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	
-	$this->get('/cancelados/', \pedidosApi::class . ':TraerCancelados' );
+	$this->get('/cancelados/', \pedidosApi::class . ':TraerCancelados' )->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	
 	$this->put('/', \pedidosApi::class . ':ModificarUno')->add(\MWparaAutentificar::class . ':DevolverTipoTrabajador');
 

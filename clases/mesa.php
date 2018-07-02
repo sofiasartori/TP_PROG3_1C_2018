@@ -8,7 +8,7 @@ class Mesa
 
 	public function CambiarEstado(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas SET estado=:estado WHERE id_mesa=:id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE id6145613_final.mesas SET estado=:estado WHERE id_mesa=:id");
 		$consulta->bindValue(':id', $this->id_mesa, PDO::PARAM_INT);
 		$consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
         $consulta->execute();		
@@ -18,7 +18,7 @@ class Mesa
 	public function AbrirMesa() 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas set estado='Con cliente esperando pedido' where id_mesa=:id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE id6145613_final.mesas set estado='Con cliente esperando pedido' where id_mesa=:id");
 		$consulta->bindValue(':id',$this->id_mesa, PDO::PARAM_INT);
 		$consulta->execute();							
 	}
@@ -26,7 +26,7 @@ class Mesa
 	public function CerrarMesa()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE mesas SET estado='Cerrada' WHERE id_mesa=:id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE id6145613_final.mesas SET estado='Cerrada' WHERE id_mesa=:id");
 		$consulta->bindValue(':id', $this->id_mesa, PDO::PARAM_INT);
 		$consulta->execute();
 		$comanda = new Comanda();
@@ -36,7 +36,7 @@ class Mesa
 	public function ConsultarMesa($id)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT estado FROM mesas WHERE id_mesa=$id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT id6145613_final.estado FROM mesas WHERE id_mesa=$id");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
 		return $mesaBuscada;
@@ -45,7 +45,7 @@ class Mesa
 
 	public function traerTodasLasMesas(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM mesas");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM id6145613_final.mesas");
 		$consulta->execute();
 		$tabla ='<table style="border:1px solid black;"><tr><th>Mesa</th><th>Estado</th></tr>';
 		while($i=$consulta->fetch()){
@@ -58,7 +58,7 @@ class Mesa
 
 	public function MesaMasUsada(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT m.id_mesa, COUNT(c.id_mesa) as 'Suma' FROM mesas as m JOIN comandas as c ON (m.id_mesa=c.id_mesa) GROUP BY c.id_mesa ORDER BY COUNT(c.id_mesa) DESC");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT m.id_mesa, COUNT(c.id_mesa) as 'Suma' FROM id6145613_final.mesas as m JOIN id6145613_final.comandas as c ON (m.id_mesa=c.id_mesa) GROUP BY c.id_mesa ORDER BY COUNT(c.id_mesa) DESC");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
 		echo "La mesa más usada fue la mesa ".$mesaBuscada->id_mesa;
@@ -66,7 +66,7 @@ class Mesa
 	
 	public function MesaMenosUsada(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT m.id_mesa, COUNT(c.id_mesa) as 'Suma' FROM mesas as m JOIN comandas as c ON (m.id_mesa=c.id_mesa) GROUP BY c.id_mesa ORDER BY COUNT(c.id_mesa) ASC");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT m.id_mesa, COUNT(c.id_mesa) as 'Suma' FROM id6145613_final.mesas as m JOIN id6145613_final.comandas as c ON (m.id_mesa=c.id_mesa) GROUP BY c.id_mesa ORDER BY COUNT(c.id_mesa) ASC");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
 		echo "La mesa menos usada fue la mesa ".$mesaBuscada->id_mesa;

@@ -17,7 +17,7 @@ class Usuario
 
 	public function MostrarTodosDatos(){
 		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoPDO->RetornarConsulta("select nombre, apellido, usuario, perfil, area, estado, ult_fecha_log, fecha_alta, fecha_baja, operaciones from usuarios");
+		$consulta =$objetoPDO->RetornarConsulta("select nombre, apellido, usuario, perfil, area, estado, ult_fecha_log, fecha_alta, fecha_baja, operaciones from id6145613_final.usuarios");
 		$consulta->execute();		
 		$tabla ='<table style="border:1px solid black;"><tr><th>Nombre</th><th>Apellido</th><th>Usuario</th><th>Perfil</th><th>Area</th><th>Estado</th><th>Fecha ult log</th><th>Fecha alta</th><th>Fecha baja</th></tr>';
 		while($i=$consulta->fetch()){
@@ -38,7 +38,7 @@ class Usuario
 
 	public function MostrarDias(){
 		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoPDO->RetornarConsulta("select usuario, ult_fecha_log, fecha_alta, fecha_baja from usuarios");
+		$consulta =$objetoPDO->RetornarConsulta("select usuario, ult_fecha_log, fecha_alta, fecha_baja from id6145613_final.usuarios");
 		$consulta->execute();		
 		$tabla ='<table style="border:1px solid black;"><tr><th>Usuario</th><th>Fecha ult log</th><th>Fecha alta</th><th>Fecha baja</th></tr>';
 		while($i=$consulta->fetch()){
@@ -53,7 +53,7 @@ class Usuario
 
 	public function MostrarOperacionesArea(){
 		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoPDO->RetornarConsulta("SELECT area, operaciones from usuarios WHERE area=:area");
+		$consulta =$objetoPDO->RetornarConsulta("SELECT area, operaciones from id6145613_final.usuarios WHERE area=:area");
 		$consulta->bindValue(':area', $this->area, PDO::PARAM_STR);
 		$consulta->execute();		
 		$tabla ='<table style="border:1px solid black;"><tr><th>Usuario</th><th>Area</th><th>Operaciones</th></tr>';
@@ -67,7 +67,7 @@ class Usuario
 
 	public function MostrarOperacionesAreaEmpleado(){
 		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoPDO->RetornarConsulta("SELECT usuario, area, operaciones from usuarios WHERE area=:area");
+		$consulta =$objetoPDO->RetornarConsulta("SELECT usuario, area, operaciones from id6145613_final.usuarios WHERE area=:area");
 		$consulta->bindValue(':area', $this->area, PDO::PARAM_STR);
 		$consulta->execute();		
 		$tabla ='<table style="border:1px solid black;"><tr><th>Usuario</th><th>Area</th><th>Operaciones</th></tr>';
@@ -82,17 +82,17 @@ class Usuario
 
 	public function MostrarOperacionesEmpleado(){
 		$objetoPDO = AccesoDatos::dameUnObjetoAcceso();
-		$consulta =$objetoPDO->RetornarConsulta("SELECT usuario, operaciones from usuarios WHERE usuario=:usuario");
+		$consulta =$objetoPDO->RetornarConsulta("SELECT usuario, operaciones from id6145613_final.usuarios WHERE usuario=:usuario");
 		$consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
 		$consulta->execute();		
 		$cantidad= $consulta->fetchObject('Usuario');
 		echo "El usuario ".$cantidad->usuario." realizó ".$cantidad->operaciones." operaciones";
 	}
 
-	public function TraerUnUsuario($usuario) 
+	public function TraerUnUsuario($usuario, $clave) 
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("select id_usuario, nombre, apellido, usuario, perfil, area, estado, ult_fecha_log, fecha_alta, fecha_baja from usuarios where usuario = '$usuario'");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT id_usuario, nombre, apellido, usuario, perfil, area, estado, ult_fecha_log, fecha_alta, fecha_baja from id6145613_final.usuarios where usuario = '$usuario' AND clave='$clave'");
 		$consulta->execute();
 		$usuarioBuscado= $consulta->fetchObject('Usuario');
 		return $usuarioBuscado;				
@@ -101,7 +101,7 @@ class Usuario
 	public function InsertarUsuario()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (nombre, apellido, usuario, perfil, area, estado, fecha_alta)values(:nombre,:apellido, :usuario, :perfil, :area, 'activo', CURRENT_TIMESTAMP)");
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into id6145613_final.usuarios (nombre, apellido, usuario, perfil, area, estado, fecha_alta)values(:nombre,:apellido, :usuario, :perfil, :area, 'activo', CURRENT_TIMESTAMP)");
 		$consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
 		$consulta->bindValue(':apellido', $this->apellido, PDO::PARAM_STR);
 		$consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
@@ -112,14 +112,14 @@ class Usuario
 
 	public function BorrarUsuario(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET estado='borrado', fecha_baja=CURRENT_TIMESTAMP where usuario=:usuario");
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE id6145613_final.usuarios SET estado='borrado', fecha_baja=CURRENT_TIMESTAMP where usuario=:usuario");
 		$consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
 		$consulta->execute();
 	}
 
 	public function CambiarEstadoUsuario(){
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET estado=:estado where usuario=:usuario");
+		$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE id6145613_final.usuarios SET estado=:estado where usuario=:usuario");
 		$consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
 		$consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
 		$consulta->execute();

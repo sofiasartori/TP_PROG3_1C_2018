@@ -14,10 +14,10 @@ class comandaApi extends Comanda implements IApiUsable
     
     public function CargarUno($request, $response, $args) {
         $ArrayDeParametros = $request->getParsedBody();
-        //var_dump($ArrayDeParametros);
+        $fotos = $request->getUploadedFiles();
         $id_mesa= $ArrayDeParametros['mesa'];
         $id_usuario=$ArrayDeParametros['usuario'];
-        //$foto_mesa= ver como se obtiene una foto con $request
+        $foto_mesa= $fotos['foto'];
         $nombre_cliente=$ArrayDeParametros['cliente'];
         $items=array();
         
@@ -32,11 +32,28 @@ class comandaApi extends Comanda implements IApiUsable
             $id_comanda .= $caracteres[mt_rand(0, $max)];
         }
 
+        $destino='./Fotos/comandas/';
+        $idFoto = $id_comanda;
+        $nombreFoto=$foto_mesa->getClientFileName();        
+        $tipoArchivo=pathinfo($nombreFoto, PATHINFO_EXTENSION);
+        if($tipoArchivo != "jpg" && $tipoArchivo !="jpeg" && $tipoArchivo != "png") {
+			echo "S&oacute;lo son permitidas imagenes con extensi&oacute;n JPG, JPEG o PNG.";
+        }
+        else{
+            if(!file_exists($destino)){
+                mkdir($destino);
+                move_uploaded_file($foto_mesa->file, $destino.$idFoto.'.'.$tipoArchivo);
+            }
+            else{
+                move_uploaded_file($foto_mesa->file, $destino.$idFoto.'.'.$tipoArchivo);
+            }
+        }
+
         $miPedido = new Comanda();
         $miPedido->codigoAlfa=$id_comanda;
         $miPedido->mesa=$id_mesa;
         $miPedido->mozo=$id_usuario;
-        //$miPedido->foto=$foto_mesa;
+        $miPedido->foto=$destino.$idFoto.'.'.$tipoArchivo;
         $miPedido->nombre_cliente=$nombre_cliente;        
         $miPedido->TomarPedido($items);        
         $response->getBody()->write("Pedido tomado, el codigo es: ".$id_comanda);
