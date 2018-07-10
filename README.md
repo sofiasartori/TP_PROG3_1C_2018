@@ -4,7 +4,7 @@
 #Cómo usarlo?
 
 #Para obtener token
-https://sofiainessartori.000webhostapp.com/apirest.php/login/
+http://sofiainessartori.000webhostapp.com/apirest.php/login/
 Método=POST
 Parametros= usuario, clave
 Usuario administrador= usuario=sofiasar clave=sofiasar
@@ -16,83 +16,83 @@ Las claves de los usuarios, son iguales a su nombre de usuario
 #Para acciones sobre los usuarios:
 Sólo administradores / usuario=sofiasar clave=sofiasar
 
--Dar de alta usuario: https://sofiainessartori.000webhostapp.com/apirest.php/usuario/
+-Dar de alta usuario: http://sofiainessartori.000webhostapp.com/apirest.php/usuario/
 Método=POST
 Parametros= nombre, apellido, usuario, clave, area (gerencia, salon, barra, cocina), perfil (socio, mozo, cervecero, bartender, cocinero)
 
--Consultar todos los usuarios: https://sofiainessartori.000webhostapp.com/apirest.php/usuario/
+-Consultar todos los usuarios: http://sofiainessartori.000webhostapp.com/apirest.php/usuario/
 Método= GET
 
--Consultar un usuario: https://sofiainessartori.000webhostapp.com/apirest.php/usuario/uno/{id_usuario}/
+-Consultar un usuario: http://sofiainessartori.000webhostapp.com/apirest.php/usuario/uno/{id_usuario}/
 Método = GET
 
--Consultar días y horario que los usuarios ingresaron: https://sofiainessartori.000webhostapp.com/apirest.php/usuario/dias/
+-Consultar días y horario que los usuarios ingresaron: http://sofiainessartori.000webhostapp.com/apirest.php/usuario/dias/
 Método=GET
 
--Consultar las operaciones por area: https://sofiainessartori.000webhostapp.com/apirest.php/operaciones/area/{area}
+-Consultar las operaciones por area: http://sofiainessartori.000webhostapp.com/apirest.php/operaciones/area/{area}
 Método=GET
 
--Consultar las operaciones por area listadas por empleados: https://sofiainessartori.000webhostapp.com/apirest.php/operaciones/areaEmpleado/{area}
+-Consultar las operaciones por area listadas por empleados: http://sofiainessartori.000webhostapp.com/apirest.php/operaciones/areaEmpleado/{area}
 Método=GET
 
--Consultar las operaciones de un usuario: https://sofiainessartori.000webhostapp.com/apirest.php/operaciones/empleado/{usuario}
+-Consultar las operaciones de un usuario: http://sofiainessartori.000webhostapp.com/apirest.php/operaciones/empleado/{usuario}
 Método=GET
 
--Dar de baja a un usuario: https://sofiainessartori.000webhostapp.com/apirest.php/usuario/
+-Dar de baja a un usuario: http://sofiainessartori.000webhostapp.com/apirest.php/usuario/
 Parámetros= usuario
 Método= DELETE
 
--Cambiar el estado de un usuario (como por ejemplo, suspenderlo): https://sofiainessartori.000webhostapp.com/apirest.php/usuario/
+-Cambiar el estado de un usuario (como por ejemplo, suspenderlo): http://sofiainessartori.000webhostapp.com/apirest.php/usuario/
 Parámetros= usuario, estado(suspendido, activo, borrado)
 Método= PUT
 
 #Para acciones sobre las comandas:
 
--Traer el estado y tiempo de una comanda: https://sofiainessartori.000webhostapp.com/apirest.php/comanda/{codigo}/
+-Traer el estado y tiempo de una comanda: http://sofiainessartori.000webhostapp.com/apirest.php/comanda/{codigo}/
 Parámetros=codigo
 Método=GET
 Cualquier persona puede consultar
 
--Tomar un pedido:https://sofiainessartori.000webhostapp.com/apirest.php/comanda/
+-Tomar un pedido:http://sofiainessartori.000webhostapp.com/apirest.php/comanda/
 Parámetros=mesa(numero de mesa), usuario(id de usuario), foto, cliente(nombre del cliente), item[0][item] (id de item), item[0][cantidad] (cantidad del item)
 Método=POST
 
--Cancelar un pedido: https://sofiainessartori.000webhostapp.com/apirest.php/comanda/
+-Cancelar un pedido: http://sofiainessartori.000webhostapp.com/apirest.php/comanda/
 Parámetros=codigo
 Método=DELETE
 Sólo los mozos pueden cancelar
 
 #Para acciones sobre los pedidos:
 
--Traer todos los pedidos pendientes para el trabajador: https://sofiainessartori.000webhostapp.com/apirest.php/pedidos/
+-Traer todos los pedidos pendientes para el trabajador: http://sofiainessartori.000webhostapp.com/apirest.php/pedidos/
 Header= debe ingresar su token
 Método= GET 
 
--Traer los productos que más se vendieron: https://sofiainessartori.000webhostapp.com/apirest.php/pedidos/masVendidos/
+-Traer los productos que más se vendieron: http://sofiainessartori.000webhostapp.com/apirest.php/pedidos/masVendidos/
 Método=GET
 Sólo administradores / usuario=sofiasar clave=sofiasar
 
--Traer los productos que menos se vendieron: https://sofiainessartori.000webhostapp.com/apirest.php/pedidos/menosVendidos/
+-Traer los productos que menos se vendieron: http://sofiainessartori.000webhostapp.com/apirest.php/pedidos/menosVendidos/
 Método=GET
 Sólo administradores / usuario=sofiasar clave=sofiasar
 
--Mostrar los pedidos cancelados: https://sofiainessartori.000webhostapp.com/apirest.php/pedidos/cancelados/
+-Mostrar los pedidos cancelados: http://sofiainessartori.000webhostapp.com/apirest.php/pedidos/cancelados/
 Método=GET
 Sólo administradores / usuario=sofiasar clave=sofiasar
 
--Establecer tiempo para el pedido (trabajador): https://sofiainessartori.000webhostapp.com/apirest.php/pedidos/
+-Establecer tiempo para el pedido (trabajador): http://sofiainessartori.000webhostapp.com/apirest.php/pedidos/
 Header= debe ingresar su token
 Parámetros= tiempo, codigo(codigo alfanumerico de la comanda)
 Método=PUT
 
--Pasar el pedido a listo para servir (trabajdor): https://sofiainessartori.000webhostapp.com/apirest.php/pedidos/
+-Pasar el pedido a listo para servir (trabajdor): http://sofiainessartori.000webhostapp.com/apirest.php/pedidos/
 Header= debe ingresar su token
 Parámetros= codigo(codigo alfanumerico de la comanda)
 Método=DELETE
 
 #Para acciones sobre las mesas:
 
--Para abrir una mesa: https://sofiainessartori.000webhostapp.com/apirest.php/mesa/
+-Para abrir una mesa: http://sofiainessartori.000webhostapp.com/apirest.php/mesa/
 Parámetros=mesa(numero de la mesa)
 Método=POST
 Cualquiera puede abrirla
