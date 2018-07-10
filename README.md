@@ -117,6 +117,14 @@ Sólo administradores / usuario=sofiasar clave=sofiasar
 Método=GET
 Sólo administradores / usuario=sofiasar clave=sofiasar
 
+-Para mostrar la mesa con la peor factura:http://sofiainessartori.000webhostapp.com/apirest.php/mesa/mesas/menosFactura/
+Método=GET
+Sólo administradores / usuario=sofiasar clave=sofiasar
+
+-Para mostrar la mesa con la mejor factura:http://sofiainessartori.000webhostapp.com/apirest.php/mesa/mesas/masFactura/
+Método=GET
+Sólo administradores / usuario=sofiasar clave=sofiasar
+
 -Para mostrar la mesa con mas facturacion:http://sofiainessartori.000webhostapp.com/apirest.php/mesa/mesas/masFacturacion/
 Método=GET
 Sólo administradores / usuario=sofiasar clave=sofiasar
