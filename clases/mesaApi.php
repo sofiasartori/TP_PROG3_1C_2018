@@ -82,6 +82,14 @@ class mesaApi extends Mesa implements IApiUsable
         Mesa::MesaMenosFacturacion();
     }
 
+    public function masFactura($request, $response, $args){
+        Mesa::MesaFacturaMasImporte();
+    }
+
+    public function menosFactura($request, $response, $args){
+        Mesa::MesaFacturaMenosImporte();
+    }
+
     public function mejorComentario($request, $response, $args){
         Mesa::MesaMejorComentario();
     }

@@ -44,7 +44,7 @@ $app->group('/comanda', function () {
  
   $this->get('/{codigo}/', \comandaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
-  $this->post('/', \comandaApi::class . ':CargarUno');
+  $this->post('/', \comandaApi::class . ':CargarUno')->add(\MWparaAutentificar::class . ':VerificarMozo');
 
   $this->delete('/', \comandaApi::class . ':BorrarUno')->add(\MWparaAutentificar::class . ':VerificarMozo');
      
@@ -85,6 +85,10 @@ $app->group('/usuario', function () {
 
 	$this->get('/mesas/menosFacturacion/', \mesaApi::class . ':masFacturacion')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 	
+	$this->get('/mesas/masFactura/', \mesaApi::class . ':masFactura')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+
+	$this->get('/mesas/menosFactura/', \mesaApi::class . ':masFactura')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+
 	$this->get('/mesas/mejorComentario/', \mesaApi::class . ':mejorComentario')->add(\MWparaAutentificar::class . ':VerificarUsuario');
 
 	$this->get('/mesas/peorComentario/', \mesaApi::class . ':peorComentario')->add(\MWparaAutentificar::class . ':VerificarUsuario');

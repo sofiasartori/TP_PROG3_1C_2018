@@ -16,7 +16,7 @@ class comandaApi extends Comanda implements IApiUsable
         $ArrayDeParametros = $request->getParsedBody();
         $fotos = $request->getUploadedFiles();
         $id_mesa= $ArrayDeParametros['mesa'];
-        $id_usuario=$ArrayDeParametros['usuario'];
+        $id_usuario=$args;
         $foto_mesa= $fotos['foto'];
         $nombre_cliente=$ArrayDeParametros['cliente'];
         $items=array();

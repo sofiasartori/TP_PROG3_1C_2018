@@ -1,6 +1,7 @@
 <?php
 
 require_once("JWT.php");
+require_once("comandaApi.php");
 require_once("pedidos.php");
 class MWparaAutentificar
 {
@@ -65,7 +66,7 @@ class MWparaAutentificar
 		$objResp= new stdclass();
 		$objResp->respuesta="";	
 		
-		  if($request->isPut())
+		  if($request->isPut()||$request->isDelete())
 		  {
 		         
 			try{
@@ -93,8 +94,32 @@ class MWparaAutentificar
 				$objResp->elToken=$token;
 			}
 		}
-		else
-			echo "no funciona el isPut";
+		else {
+			try{
+				$token=$request->getHeader('HTTP_RESTAURANTLOLO')[0];
+				JsonWToken::Checkear($token);
+				$objResp->esValido=true;
+			}
+			catch (Exception $e){
+				$objResp->excepcion=$e->getMessage();
+				$objResp->esValido=false;
+			}
+
+			if($objResp->esValido){
+				$payload=JsonWToken::ObtenerDatos($token);
+				if($payload->Perfil=="mozo"){
+					ComandaApi::CargarUno($request, $response, $payload->Usuario);
+					//$response=$next($request, $response);
+					
+				}
+				else
+					$objResp->respuesta="Solo mozos pueden realizar esta acción";
+			}
+			else{
+				$objResp="Solo usuarios registrados";
+				$objResp->elToken=$token;
+			}
+		}
 		if($objResp->respuesta !=""){
 			$nueva=$response->withJson($objResp, 401);
 			return $nueva;
