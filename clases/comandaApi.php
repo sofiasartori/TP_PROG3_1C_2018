@@ -32,7 +32,7 @@ class comandaApi extends Comanda implements IApiUsable
             $id_comanda .= $caracteres[mt_rand(0, $max)];
         }
 
-        $destino='./Fotos/comandas/';
+        $destino='/storage/ssd3/613/6145613/public_html/Fotos/comandas/';
         $idFoto = $id_comanda;
         $nombreFoto=$foto_mesa->getClientFileName();        
         $tipoArchivo=pathinfo($nombreFoto, PATHINFO_EXTENSION);

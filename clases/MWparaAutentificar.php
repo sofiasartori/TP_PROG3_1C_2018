@@ -23,13 +23,6 @@ class MWparaAutentificar
 		$objResp= new stdclass();
 		$objResp->respuesta="";	
 		
-		  if($request->isGet())
-		  {
-		     $response->getBody()->write('<p>NO necesita credenciales para los get </p>');
-		     $response = $next($request, $response);
-		  }
-		  else
-		  {		    
 				try{
 					$token=$request->getHeader('HTTP_RESTAURANTLOLO')[0];
 					JsonWToken::Checkear($token);
@@ -53,7 +46,7 @@ class MWparaAutentificar
 				else{
 					$objResp->respuesta="Solo usuarios registrados";
 				}
-			}
+			
 			if($objResp->respuesta !=""){
 				$nueva=$response->withJson($objResp, 401);
 				return $nueva;

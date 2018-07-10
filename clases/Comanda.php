@@ -15,15 +15,12 @@ class Comanda
 		$fecha=date("Y-m-d");
 		$hora=date("H:i:s");
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consultaUno =$objetoAccesoDato->RetornarConsulta("SELECT id_usuario FROM id6145613_final.usuarios where usuario='$this->mozo')");
+		$consultaUno =$objetoAccesoDato->RetornarConsulta("SELECT id_usuario FROM id6145613_final.usuarios where usuario='$this->mozo';");
 		$consultaUno->execute();
 		$UsuarioBuscado= $consultaUno->fetchObject('Comanda');
-		var_dump($UsuarioBuscado);
-		/*
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into id6145613_final.comandas (id_comanda, id_mesa, id_usuario, foto_mesa, nombre_cliente, hora_inicio, fecha) values (:id_comanda,:id_mesa, $UsuarioBuscado->mozo, :foto_mesa, :nombre_cliente, '$hora', '$fecha')");
+        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into id6145613_final.comandas (id_comanda, id_mesa, id_usuario, foto_mesa, nombre_cliente, hora_inicio, fecha) values (:id_comanda,:id_mesa, $UsuarioBuscado->id_usuario, :foto_mesa, :nombre_cliente, '$hora', '$fecha')");
 		$consulta->bindValue(':id_comanda', $this->codigoAlfa, PDO::PARAM_STR);
 		$consulta->bindValue(':id_mesa',$this->mesa, PDO::PARAM_INT);
-		$consulta->bindValue(':id_usuario', $this->mozo, PDO::PARAM_INT);
 		$consulta->bindValue(':foto_mesa', $this->foto, PDO::PARAM_STR);
 		$consulta->bindValue(':nombre_cliente', $this->nombre_cliente, PDO::PARAM_STR);		
 		$consulta->execute();			
@@ -34,7 +31,7 @@ class Comanda
 			$itemsComanda->bindValue(':id_comanda', $this->codigoAlfa, PDO::PARAM_STR);
 			$itemsComanda->bindValue(':cantidad', $items[$i]['cantidad'], PDO::PARAM_INT);
 			$itemsComanda->execute();
-		}*/
+		}
 		
 	}
 

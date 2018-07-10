@@ -40,7 +40,7 @@ class Mesa
 	public function ConsultarMesa($id)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT id6145613_final.estado FROM mesas WHERE id_mesa=$id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT estado FROM id6145613_final.mesas WHERE id_mesa=$id");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
 		return $mesaBuscada;
@@ -81,7 +81,7 @@ class Mesa
 		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT sum(i.precio*it.cantidad) as 'SUMA', c.id_mesa from id6145613_final.items as i JOIN id6145613_final.itemsxcomanda as it ON(i.id_item=it.id_item) JOIN id6145613_final.comandas as c ON (c.id_comanda=it.id_comanda) group by c.id_mesa ORDER by sum(i.precio*it.cantidad) DESC limit 1;");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
-		echo "La mesa que mas facturo fue la mesa ".$mesaBuscada->id_mesa." con un monto de $".$mesaBuscada->Suma;
+		echo "La mesa que mas facturo fue la mesa ".$mesaBuscada->id_mesa." con un monto de $".$mesaBuscada->SUMA;
 	}
 
 	public function MesaMenosFacturacion(){
@@ -89,7 +89,7 @@ class Mesa
 		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT sum(i.precio*it.cantidad) as 'SUMA', c.id_mesa from id6145613_final.items as i JOIN id6145613_final.itemsxcomanda as it ON(i.id_item=it.id_item) JOIN id6145613_final.comandas as c ON (c.id_comanda=it.id_comanda) group by c.id_mesa ORDER by sum(i.precio*it.cantidad) ASC limit 1");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
-		echo "La mesa que menos facturo fue la mesa ".$mesaBuscada->id_mesa." con un monto de $".$mesaBuscada->Suma;
+		echo "La mesa que menos facturo fue la mesa ".$mesaBuscada->id_mesa." con un monto de $".$mesaBuscada->SUMA;
 	}
 
 	public function MesaFacturaMasImporte(){
@@ -97,7 +97,8 @@ class Mesa
 		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT sum(i.precio*it.cantidad) as 'SUMA', it.id_comanda, m.id_mesa from id6145613_final.items as i JOIN id6145613_final.itemsxcomanda as it ON(i.id_item=it.id_item) JOIN id6145613_final.mesas as m JOIN id6145613_final.comandas as c ON(it.id_comanda=c.id_comanda and m.id_mesa=c.id_mesa) group by it.id_comanda ORDER by sum(i.precio*it.cantidad) DESC limit 1;");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
-		echo "La mesa que tuvo la factura con mas importe fue la mesa ".$mesaBuscada->id_mesa." con la comanda ".$id_comanda." con un monto de $".$mesaBuscada->Suma;
+		var_dump($mesaBuscada);
+		echo "La mesa que tuvo la factura con mas importe fue la mesa ".$mesaBuscada->id_mesa." con la comanda ".$mesaBuscada->id_comanda." con un monto de $".$mesaBuscada->SUMA;
 	}
 
 	public function MesaFacturaMenosImporte(){
@@ -105,7 +106,7 @@ class Mesa
 		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT sum(i.precio) as 'SUMA', it.id_comanda, m.id_mesa from id6145613_final.items as i JOIN id6145613_final.itemsxcomanda as it ON(i.id_item=it.id_item) JOIN id6145613_final.mesas as m JOIN id6145613_final.comandas as c ON(it.id_comanda=c.id_comanda and m.id_mesa=c.id_mesa) group by it.id_comanda ORDER by sum(i.precio*it.cantidad) ASC limit 1;");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
-		echo "La mesa que tuvo la factura con menos importe fue la mesa ".$mesaBuscada->id_mesa." con la comanda ".$id_comanda." con un monto de $".$mesaBuscada->Suma;
+		echo "La mesa que tuvo la factura con menos importe fue la mesa ".$mesaBuscada->id_mesa." con la comanda ".$mesaBuscada->id_comanda." con un monto de $".$mesaBuscada->SUMA;
 	}
 
 	public function MesaMejorComentario(){
@@ -113,7 +114,7 @@ class Mesa
 		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT sum(e.mozo+ e.restaurant+ e.cocinero+ e.mesa) as 'SUMA', c.id_mesa, e.comentario from id6145613_final.encuestas as e JOIN id6145613_final.comandas as c ON (e.id_comanda=c.id_comanda)group by c.id_comanda ORDER by SUM(e.mozo+ e.restaurant+ e.cocinero+ e.mesa) DESC limit 1;");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
-		echo "La mesa que tuvo mejor puntaje fue la ".$mesaBuscada->id_mesa." con el comentario ".$mesaBuscada->comentario;
+		echo "La mesa que tuvo mejor puntaje fue la ".$mesaBuscada->id_mesa." con el comentario: ".$mesaBuscada->comentario;
 	}
 	
 	public function MesaPeorComentario(){
@@ -121,7 +122,7 @@ class Mesa
 		$consulta =$objetoAccesoDato->RetornarConsulta("SELECT sum(e.mozo+ e.restaurant+ e.cocinero+ e.mesa) as 'SUMA', c.id_mesa, e.comentario from id6145613_final.encuestas as e JOIN id6145613_final.comandas as c ON (e.id_comanda=c.id_comanda)group by c.id_comanda ORDER by SUM(e.mozo+ e.restaurant+ e.cocinero+ e.mesa) ASC limit 1;");
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
-		echo "La mesa que tuvo peor puntaje fue la ".$mesaBuscada->id_mesa." con el comentario ".$mesaBuscada->comentario;
+		echo "La mesa que tuvo peor puntaje fue la ".$mesaBuscada->id_mesa." con el comentario: ".$mesaBuscada->comentario;
 	}
 
 	public function FacturaFechas(){
@@ -132,7 +133,7 @@ class Mesa
 		$consulta->bindValue(':fecha_fin', $this->fecha_fin, PDO::PARAM_STR);
 		$consulta->execute();
 		$mesaBuscada= $consulta->fetchObject('Mesa');
-		echo "La mesa ".$mesaBuscada->id_mesa." facturo $".$mesaBuscada->Suma." entre las fechas seleccionadas";
+		echo "La mesa ".$mesaBuscada->id_mesa." facturo $".$mesaBuscada->SUMA." entre las fechas seleccionadas";
 	}
 	
 }
